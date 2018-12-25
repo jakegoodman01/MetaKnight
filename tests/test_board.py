@@ -1,10 +1,14 @@
 from unittest import TestCase
-from metaknight import Board
+from metaknight import Board, Square
 
 
 class SquareTests(TestCase):
     def setUp(self):
-        pass
+        self.square = Square('a1')
+
+    def test_square_construction(self):
+        self.assertEqual(self.square.rank, '1')
+        self.assertEqual(self.square.file, 'a')
 
 
 class BoardTests(TestCase):
