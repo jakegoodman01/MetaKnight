@@ -44,3 +44,12 @@ class Board:
 
     def __init__(self):
         self.squares = [[Square(file + rank) for file in Board.files] for rank in Board.ranks]
+
+    def get_square_at_location(self, location: str) -> Square:
+        """
+        :param location: string coordinates of a square. For example: 'a3' or 'c8'
+        :return: the square at location in this board
+        """
+        file = Board.files.index(location[0])
+        rank = Board.ranks.index(location[1])
+        return self.squares[rank][file]
