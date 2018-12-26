@@ -6,6 +6,7 @@ class Square:
     def __init__(self, coordinates: str):
         self.file = coordinates[0]
         self.rank = coordinates[1]
+        self.piece = None
 
     def __repr__(self):
         return f'{self.file}{self.rank}'
