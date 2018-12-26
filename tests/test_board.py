@@ -11,14 +11,14 @@ class SquareTests(TestCase):
         self.assertEqual(self.square.file, 'a')
 
     def test_up(self):
-        self.assertEqual(self.square.up(), Square('b1'))
-        self.assertEqual(Square('b1').up(), Square('c1'))
-        self.assertEqual(Square('c1').up(), Square('d1'))
-        self.assertEqual(Square('d1').up(), Square('e1'))
-        self.assertEqual(Square('e1').up(), Square('f1'))
-        self.assertEqual(Square('f1').up(), Square('g1'))
-        self.assertEqual(Square('g1').up(), Square('h1'))
-        self.assertRaises(lambda: OutOfBoundsError, Square('h1').up())
+        self.assertEqual(self.square.up(), Square('a2'))
+        self.assertEqual(Square('a2').up(), Square('a3'))
+        self.assertEqual(Square('a3').up(), Square('a4'))
+        self.assertEqual(Square('a4').up(), Square('a5'))
+        self.assertEqual(Square('a5').up(), Square('a6'))
+        self.assertEqual(Square('a6').up(), Square('a7'))
+        self.assertEqual(Square('a7').up(), Square('a8'))
+        self.assertRaises(lambda: OutOfBoundsError, Square('a8').up())
 
 
 class BoardTests(TestCase):
