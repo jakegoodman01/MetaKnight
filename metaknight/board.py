@@ -1,3 +1,7 @@
+class OutOfBoundsError(Exception):
+    """ Raised when a square is referenced that sits outside of the standard 8x8 chess board"""
+
+
 class Square:
     def __init__(self, coordinates: str):
         self.file = coordinates[0]
