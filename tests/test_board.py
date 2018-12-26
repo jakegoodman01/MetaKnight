@@ -20,6 +20,16 @@ class SquareTests(TestCase):
         self.assertEqual(Square('a7').up(), Square('a8'))
         self.assertRaises(lambda: OutOfBoundsError, Square('a8').up())
 
+    def test_down(self):
+        self.assertEqual(Square('a8').down(), Square('a7'))
+        self.assertEqual(Square('a7').down(), Square('a6'))
+        self.assertEqual(Square('a6').down(), Square('a5'))
+        self.assertEqual(Square('a5').down(), Square('a4'))
+        self.assertEqual(Square('a4').down(), Square('a3'))
+        self.assertEqual(Square('a3').down(), Square('a2'))
+        self.assertEqual(Square('a2').down(), Square('a1'))
+        self.assertRaises(lambda: OutOfBoundsError, self.square.down())
+
 
 class BoardTests(TestCase):
     def setUp(self):
