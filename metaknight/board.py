@@ -25,6 +25,18 @@ class Square:
         next_rank = Board.ranks[Board.ranks.index(self.rank) - 1]
         return Square(self.file + next_rank)
 
+    def left(self):
+        if self.file == 'a':
+            raise OutOfBoundsError()
+        next_file = Board.files[Board.files.index(self.file) - 1]
+        return Square(next_file + self.rank)
+
+    def right(self):
+        if self.file == 'h':
+            raise OutOfBoundsError()
+        next_file = Board.files[Board.files.index(self.file) + 1]
+        return Square(next_file + self.rank)
+
 
 class Board:
     files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
