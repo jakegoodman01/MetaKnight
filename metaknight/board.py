@@ -106,6 +106,7 @@ class Board:
         return self.squares[rank][file]
 
     def pawn_moves(self, square: Square) -> List[List[Square]]:
+        # TODO: Account for en passant
         moves = []
         square = self.get_square_at_location(repr(square))
         if square.piece.color is Color.WHITE:
@@ -142,4 +143,84 @@ class Board:
                 diagonal = self.get_square_at_location(repr(diagonal.right()))
                 if diagonal.piece and diagonal.piece.color is Color.WHITE:
                     moves.append([diagonal])
+        return moves
+
+    def knight_moves(self, square: Square) -> List[List[Square]]:
+        # TODO: Make this less horrible :)
+        original = self.get_square_at_location(repr(square))
+        color = original.piece.color
+        moves = []
+
+        # upper left
+        try:
+            square = self.get_square_at_location(repr(original.up()))
+            square = self.get_square_at_location(repr(square.up()))
+            square = self.get_square_at_location(repr(square.left()))
+            if not square.piece or square.piece.color is not color:
+                moves.append([square])
+        except OutOfBoundsError:
+            pass
+        # upper right
+        try:
+            square = self.get_square_at_location(repr(original.up()))
+            square = self.get_square_at_location(repr(square.up()))
+            square = self.get_square_at_location(repr(square.right()))
+            if not square.piece or square.piece.color is not color:
+                moves.append([square])
+        except OutOfBoundsError:
+            pass
+        # lower left
+        try:
+            square = self.get_square_at_location(repr(original.down()))
+            square = self.get_square_at_location(repr(square.down()))
+            square = self.get_square_at_location(repr(square.left()))
+            if not square.piece or square.piece.color is not color:
+                moves.append([square])
+        except OutOfBoundsError:
+            pass
+        # lower right
+        try:
+            square = self.get_square_at_location(repr(original.down()))
+            square = self.get_square_at_location(repr(square.down()))
+            square = self.get_square_at_location(repr(square.right()))
+            if not square.piece or square.piece.color is not color:
+                moves.append([square])
+        except OutOfBoundsError:
+            pass
+        # left upper
+        try:
+            square = self.get_square_at_location(repr(original.left()))
+            square = self.get_square_at_location(repr(square.left()))
+            square = self.get_square_at_location(repr(square.up()))
+            if not square.piece or square.piece.color is not color:
+                moves.append([square])
+        except OutOfBoundsError:
+            pass
+        # left lower
+        try:
+            square = self.get_square_at_location(repr(original.left()))
+            square = self.get_square_at_location(repr(square.left()))
+            square = self.get_square_at_location(repr(square.down()))
+            if not square.piece or square.piece.color is not color:
+                moves.append([square])
+        except OutOfBoundsError:
+            pass
+        # right upper
+        try:
+            square = self.get_square_at_location(repr(original.right()))
+            square = self.get_square_at_location(repr(square.right()))
+            square = self.get_square_at_location(repr(square.up()))
+            if not square.piece or square.piece.color is not color:
+                moves.append([square])
+        except OutOfBoundsError:
+            pass
+        # right lower
+        try:
+            square = self.get_square_at_location(repr(original.right()))
+            square = self.get_square_at_location(repr(square.right()))
+            square = self.get_square_at_location(repr(square.down()))
+            if not square.piece or square.piece.color is not color:
+                moves.append([square])
+        except OutOfBoundsError:
+            pass
         return moves
