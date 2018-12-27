@@ -62,7 +62,12 @@ class Board:
                 else:
                     output += '. '
             output += '\n'
-        return output
+        return output[:-1]  # This removes the last \n character
+
+    def clear(self):
+        """ This method will only be used for debugging purposes
+        """
+        self.squares = [[Square(file + rank) for file in Board.files] for rank in Board.ranks]
 
     def set_up(self):
         # Pawns
