@@ -69,4 +69,15 @@ class BoardTests(TestCase):
         self.assertEqual(self.board.get_square_at_location('h8'), Square('h8'))
         self.assertRaises(ValueError, lambda: self.board.get_square_at_location('a9'))
 
+    def test_set_up(self):
+        b = '♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜ ' \
+            '\n♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟ ' \
+            '\n. . . . . . . . ' \
+            '\n. . . . . . . . ' \
+            '\n. . . . . . . . ' \
+            '\n. . . . . . . . ' \
+            '\n♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙ ' \
+            '\n♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ '
+        self.assertEqual(repr(Board()), b)
+
 
