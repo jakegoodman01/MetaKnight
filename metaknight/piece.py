@@ -19,3 +19,31 @@ class Piece:
     def __init__(self, piece_type: PieceType, color: Color):
         self.piece_type = piece_type
         self.color = color
+
+    def __repr__(self):
+        if self.color is Color.WHITE:
+            if self.piece_type is PieceType.PAWN:
+                return '\u2659'
+            if self.piece_type is PieceType.KNIGHT:
+                return '\u2658'
+            if self.piece_type is PieceType.BISHOP:
+                return '\u2657'
+            if self.piece_type is PieceType.ROOK:
+                return '\u2656'
+            if self.piece_type is PieceType.QUEEN:
+                return '\u2655'
+            if self.piece_type is PieceType.KING:
+                return '\u2654'
+        elif self.color is Color.BLACK:
+            if self.piece_type is PieceType.PAWN:
+                return '\u265f'
+            if self.piece_type is PieceType.KNIGHT:
+                return '\u265e'
+            if self.piece_type is PieceType.BISHOP:
+                return '\u265d'
+            if self.piece_type is PieceType.ROOK:
+                return '\u265c'
+            if self.piece_type is PieceType.QUEEN:
+                return '\u265b'
+            if self.piece_type is PieceType.KING:
+                return '\u265a'
