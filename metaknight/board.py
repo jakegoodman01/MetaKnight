@@ -1,3 +1,6 @@
+from metaknight import Piece, PieceType, Color
+
+
 class OutOfBoundsError(Exception):
     """ Raised when a square is referenced that sits outside of the standard 8x8 chess board"""
 
@@ -45,6 +48,34 @@ class Board:
 
     def __init__(self):
         self.squares = [[Square(file + rank) for file in Board.files] for rank in Board.ranks]
+        self.set_up()
+
+    def set_up(self):
+        # Pawns
+        for i in range(8):
+            self.squares[1][i] = Piece(PieceType.PAWN, Color.WHITE)
+            self.squares[6][i] = Piece(PieceType.PAWN, Color.BLACK)
+
+        # Rooks
+        for i in (0, 7):
+            self.squares[0][i] = Piece(PieceType.ROOK, Color.WHITE)
+            self.squares[7][i] = Piece(PieceType.ROOK, Color.BLACK)
+
+        # Knights
+        for i in (1, 6):
+            self.squares[0][i] = Piece(PieceType.KNIGHT, Color.WHITE)
+            self.squares[7][i] = Piece(PieceType.KNIGHT, Color.BLACK)
+
+        # Bishops
+        for i in (2, 5):
+            self.squares[0][i] = Piece(PieceType.BISHOP, Color.WHITE)
+            self.squares[7][i] = Piece(PieceType.BISHOP, Color.BLACK)
+
+        # Kings and queens
+        self.squares[0][3] = Piece(PieceType.QUEEN, Color.WHITE)
+        self.squares[0][4] = Piece(PieceType.KING, Color.WHITE)
+        self.squares[7][3] = Piece(PieceType.QUEEN, Color.BLACK)
+        self.squares[7][4] = Piece(PieceType.KING, Color.BLACK)
 
     def get_square_at_location(self, location: str) -> Square:
         """
