@@ -1,8 +1,9 @@
-from metaknight import Piece, PieceType, Color
+from metaknight.piece import PieceType, Piece, Color
 
 
 class OutOfBoundsError(Exception):
     """ Raised when a square is referenced that sits outside of the standard 8x8 chess board"""
+    pass
 
 
 class Square:
@@ -50,32 +51,54 @@ class Board:
         self.squares = [[Square(file + rank) for file in Board.files] for rank in Board.ranks]
         self.set_up()
 
+    def __repr__(self):
+        output = ''
+        for rank in range(7, -1, -1):
+            for file in range(0, 8):
+                piece = self.squares[rank][file].piece
+                if piece is None:
+                    output += '. '
+                elif piece.piece_type is PieceType.PAWN:
+                    output += 'p '
+                elif piece.piece_type is PieceType.KNIGHT:
+                    output += 'N '
+                elif piece.piece_type is PieceType.BISHOP:
+                    output += 'B '
+                elif piece.piece_type is PieceType.ROOK:
+                    output += 'R '
+                elif piece.piece_type is PieceType.QUEEN:
+                    output += 'Q '
+                elif piece.piece_type is PieceType.KING:
+                    output += 'K '
+            output += '\n'
+        return output
+
     def set_up(self):
         # Pawns
         for i in range(8):
-            self.squares[1][i] = Piece(PieceType.PAWN, Color.WHITE)
-            self.squares[6][i] = Piece(PieceType.PAWN, Color.BLACK)
+            self.squares[1][i].piece = Piece(PieceType.PAWN, Color.WHITE)
+            self.squares[6][i].piece = Piece(PieceType.PAWN, Color.BLACK)
 
         # Rooks
         for i in (0, 7):
-            self.squares[0][i] = Piece(PieceType.ROOK, Color.WHITE)
-            self.squares[7][i] = Piece(PieceType.ROOK, Color.BLACK)
+            self.squares[0][i].piece = Piece(PieceType.ROOK, Color.WHITE)
+            self.squares[7][i].piece = Piece(PieceType.ROOK, Color.BLACK)
 
         # Knights
         for i in (1, 6):
-            self.squares[0][i] = Piece(PieceType.KNIGHT, Color.WHITE)
-            self.squares[7][i] = Piece(PieceType.KNIGHT, Color.BLACK)
+            self.squares[0][i].piece = Piece(PieceType.KNIGHT, Color.WHITE)
+            self.squares[7][i].piece = Piece(PieceType.KNIGHT, Color.BLACK)
 
         # Bishops
         for i in (2, 5):
-            self.squares[0][i] = Piece(PieceType.BISHOP, Color.WHITE)
-            self.squares[7][i] = Piece(PieceType.BISHOP, Color.BLACK)
+            self.squares[0][i].piece = Piece(PieceType.BISHOP, Color.WHITE)
+            self.squares[7][i].piece = Piece(PieceType.BISHOP, Color.BLACK)
 
         # Kings and queens
-        self.squares[0][3] = Piece(PieceType.QUEEN, Color.WHITE)
-        self.squares[0][4] = Piece(PieceType.KING, Color.WHITE)
-        self.squares[7][3] = Piece(PieceType.QUEEN, Color.BLACK)
-        self.squares[7][4] = Piece(PieceType.KING, Color.BLACK)
+        self.squares[0][3].piece = Piece(PieceType.QUEEN, Color.WHITE)
+        self.squares[0][4].piece = Piece(PieceType.KING, Color.WHITE)
+        self.squares[7][3].piece = Piece(PieceType.QUEEN, Color.BLACK)
+        self.squares[7][4].piece = Piece(PieceType.KING, Color.BLACK)
 
     def get_square_at_location(self, location: str) -> Square:
         """
