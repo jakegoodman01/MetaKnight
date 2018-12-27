@@ -57,20 +57,10 @@ class Board:
         for rank in range(7, -1, -1):
             for file in range(0, 8):
                 piece = self.squares[rank][file].piece
-                if piece is None:
+                if piece:
+                    output += f'{repr(piece)} '
+                else:
                     output += '. '
-                elif piece.piece_type is PieceType.PAWN:
-                    output += 'p '
-                elif piece.piece_type is PieceType.KNIGHT:
-                    output += 'N '
-                elif piece.piece_type is PieceType.BISHOP:
-                    output += 'B '
-                elif piece.piece_type is PieceType.ROOK:
-                    output += 'R '
-                elif piece.piece_type is PieceType.QUEEN:
-                    output += 'Q '
-                elif piece.piece_type is PieceType.KING:
-                    output += 'K '
             output += '\n'
         return output
 
