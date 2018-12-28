@@ -202,3 +202,22 @@ class Board:
 
     def queen_moves(self, square: Square) -> List[List[Square]]:
         return self.rook_moves(square) + self.bishop_moves(square)
+
+    def king_moves(self, square: Square) -> List[List[Square]]:
+        original = self.get_square(square=square)
+        color = original.piece.color
+        moves = [
+            self.get_square(square=original.up().left()),
+            self.get_square(square=original.up()),
+            self.get_square(square=original.up().right()),
+            self.get_square(square=original.right()),
+            self.get_square(square=original.right().down()),
+            self.get_square(square=original.down()),
+            self.get_square(square=original.down().left()),
+            self.get_square(square=original.left())
+        ]
+        possible_moves = []
+        for move in moves:
+            if move != Square('00') and (not move.piece or move.piece.color is not color):
+                possible_moves.append([move])
+        return possible_moves

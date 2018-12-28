@@ -167,3 +167,11 @@ class BoardTests(TestCase):
         self.assertEqual(self.board.queen_moves(Square('e6')), [
             [Square('e7'), Square('e8')], [Square('e5'), Square('e4')], [Square('d6')], [Square('f6'), Square('g6')],
             [], [], [Square('d5'), Square('c4'), Square('b3'), Square('a2')], [Square('f5')]])
+
+    def test_king_moves(self):
+        self.set_test_position_1()
+        print(self.board)
+        # white king
+        self.assertEqual(self.board.king_moves(Square('g1')), [[Square('g2')], [Square('h1')], [Square('f1')]])
+        # black king
+        self.assertEqual(self.board.king_moves(Square('g8')), [[Square('h8')]])
