@@ -190,72 +190,56 @@ class Board:
 
         # upper left
         try:
-            square = self.get_square_at_location(repr(original.up()))
-            square = self.get_square_at_location(repr(square.up()))
-            square = self.get_square_at_location(repr(square.left()))
+            square = self.get_square_at_location(repr(original.up().up().left()))
             if not square.piece or square.piece.color is not color:
                 moves.append([square])
         except OutOfBoundsError:
             pass
         # upper right
         try:
-            square = self.get_square_at_location(repr(original.up()))
-            square = self.get_square_at_location(repr(square.up()))
-            square = self.get_square_at_location(repr(square.right()))
+            square = self.get_square_at_location(repr(original.up().up().right()))
             if not square.piece or square.piece.color is not color:
                 moves.append([square])
         except OutOfBoundsError:
             pass
         # lower left
         try:
-            square = self.get_square_at_location(repr(original.down()))
-            square = self.get_square_at_location(repr(square.down()))
-            square = self.get_square_at_location(repr(square.left()))
+            square = self.get_square_at_location(repr(original.down().down().left()))
             if not square.piece or square.piece.color is not color:
                 moves.append([square])
         except OutOfBoundsError:
             pass
         # lower right
         try:
-            square = self.get_square_at_location(repr(original.down()))
-            square = self.get_square_at_location(repr(square.down()))
-            square = self.get_square_at_location(repr(square.right()))
+            square = self.get_square_at_location(repr(original.down().down().right()))
             if not square.piece or square.piece.color is not color:
                 moves.append([square])
         except OutOfBoundsError:
             pass
         # left upper
         try:
-            square = self.get_square_at_location(repr(original.left()))
-            square = self.get_square_at_location(repr(square.left()))
-            square = self.get_square_at_location(repr(square.up()))
+            square = self.get_square_at_location(repr(original.left().left().up()))
             if not square.piece or square.piece.color is not color:
                 moves.append([square])
         except OutOfBoundsError:
             pass
         # left lower
         try:
-            square = self.get_square_at_location(repr(original.left()))
-            square = self.get_square_at_location(repr(square.left()))
-            square = self.get_square_at_location(repr(square.down()))
+            square = self.get_square_at_location(repr(original.left().left().down()))
             if not square.piece or square.piece.color is not color:
                 moves.append([square])
         except OutOfBoundsError:
             pass
         # right upper
         try:
-            square = self.get_square_at_location(repr(original.right()))
-            square = self.get_square_at_location(repr(square.right()))
-            square = self.get_square_at_location(repr(square.up()))
+            square = self.get_square_at_location(repr(original.right().right().up()))
             if not square.piece or square.piece.color is not color:
                 moves.append([square])
         except OutOfBoundsError:
             pass
         # right lower
         try:
-            square = self.get_square_at_location(repr(original.right()))
-            square = self.get_square_at_location(repr(square.right()))
-            square = self.get_square_at_location(repr(square.down()))
+            square = self.get_square_at_location(repr(original.right().right().down()))
             if not square.piece or square.piece.color is not color:
                 moves.append([square])
         except OutOfBoundsError:
