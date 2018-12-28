@@ -146,3 +146,13 @@ class BoardTests(TestCase):
         # black bishops
         self.assertEqual(self.board.bishop_moves(Square('a5')), [[], [Square('b6'), Square('c7')], [],
                                                                  [Square('b4'), Square('c3')]])
+
+    def test_rook_moves(self):
+        self.set_test_position_1()
+        print(self.board)
+        # white rooks
+        self.assertEqual(self.board.rook_moves(Square('b1')), [[], [], [Square('a1')], [Square('c1')]])
+        self.assertEqual(self.board.rook_moves(Square('e1')), [[Square('e2'), Square('e3')], [], [], [Square('f1')]])
+        # black rooks
+        self.assertEqual(self.board.rook_moves(Square('a8')), [[], [], [], [Square('b8'), Square('c8')]])
+        self.assertEqual(self.board.rook_moves(Square('f8')), [[], [], [Square('e8')], []])

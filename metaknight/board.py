@@ -215,3 +215,24 @@ class Board:
                         break
                 moves.append(diagonal.copy())
         return moves
+
+    def rook_moves(self, square: Square) -> List[List[Square]]:
+        moves = []
+        original = self.get_square(square=square)
+        color = original.piece.color
+        for func in (Square.up, Square.down, Square.left, Square.right):
+            line = []
+            square = original
+            while True:
+                square = self.get_square(square=func(square))
+                if square == Square('00'):
+                    break
+                if not square.piece and square != Square('00'):
+                    line.append(square)
+                elif square.piece.color is not color:
+                    line.append(square)
+                    break
+                else:
+                    break
+            moves.append(line.copy())
+        return moves
