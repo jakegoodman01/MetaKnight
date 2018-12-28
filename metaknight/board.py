@@ -146,40 +146,27 @@ class Board:
         # TODO: Account for en passant
         moves = []
         square = self.get_square_at_location(repr(square))
-        if square.piece.color is Color.WHITE:
-            forward_square = self.get_square_at_location(repr(square.up()))
-            if forward_square.piece is None:
-                moves.append([forward_square])
-                forward_square = self.get_square_at_location(repr(forward_square.up()))
-                if square.rank == '2' and forward_square.piece is None:
-                    moves[0].append(forward_square)
-            if square.file != 'a':
-                diagonal = self.get_square_at_location(repr(square.up()))
-                diagonal = self.get_square_at_location(repr(diagonal.left()))
-                if diagonal.piece and diagonal.piece.color is Color.BLACK:
-                    moves.append([diagonal])
-            if square.file != 'h':
-                diagonal = self.get_square_at_location(repr(square.up()))
-                diagonal = self.get_square_at_location(repr(diagonal.right()))
-                if diagonal.piece and diagonal.piece.color is Color.BLACK:
-                    moves.append([diagonal])
-        else:
-            forward_square = self.get_square_at_location(repr(square.down()))
-            if forward_square.piece is None:
-                moves.append([forward_square])
-                forward_square = self.get_square_at_location(repr(forward_square.down()))
-                if square.rank == '7' and forward_square.piece is None:
-                    moves[0].append(forward_square)
-            if square.file != 'a':
-                diagonal = self.get_square_at_location(repr(square.down()))
-                diagonal = self.get_square_at_location(repr(diagonal.left()))
-                if diagonal.piece and diagonal.piece.color is Color.WHITE:
-                    moves.append([diagonal])
-            if square.file != 'h':
-                diagonal = self.get_square_at_location(repr(square.down()))
-                diagonal = self.get_square_at_location(repr(diagonal.right()))
-                if diagonal.piece and diagonal.piece.color is Color.WHITE:
-                    moves.append([diagonal])
+        color = square.piece.color
+        forward = Square.up
+        rank = '2'
+        if square.piece.color is Color.BLACK:
+            forward = Square.down
+            rank = '7'
+            
+        forward_square = self.get_square_at_location(repr(forward(square)))
+        if forward_square.piece is None:
+            moves.append([forward_square])
+            forward_square = self.get_square_at_location(repr(forward(forward_square)))
+            if square.rank == rank and forward_square.piece is None:
+                moves[0].append(forward_square)
+        if square.file != 'a':
+            diagonal = self.get_square_at_location(repr(forward(square).left()))
+            if diagonal.piece and diagonal.piece.color is not color:
+                moves.append([diagonal])
+        if square.file != 'h':
+            diagonal = self.get_square_at_location(repr(forward(square).right()))
+            if diagonal.piece and diagonal.piece.color is not color:
+                moves.append([diagonal])
         return moves
 
     def knight_moves(self, square: Square) -> List[List[Square]]:
