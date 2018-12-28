@@ -236,3 +236,6 @@ class Board:
                     break
             moves.append(line.copy())
         return moves
+
+    def queen_moves(self, square: Square) -> List[List[Square]]:
+        return self.rook_moves(square) + self.bishop_moves(square)
