@@ -55,6 +55,19 @@ class BoardTests(TestCase):
     def setUp(self):
         self.board = Board()
 
+    def set_test_position_1(self):
+        # This is a board state that I use to test certain functions
+        self.board.set_board_state([
+            'R..N.RK.',
+            'PP.P.PPP',
+            'n.P.Q.n.',
+            'Bbp..pp.',
+            '...Bp...',
+            '..pp....',
+            'pp...n.p',
+            '.r.qr.k.',
+        ])
+
     def test_board_construction(self):
         self.assertEqual(len(self.board.squares), 8)
         self.assertEqual(len(self.board.squares[0]), 8)
@@ -95,16 +108,7 @@ class BoardTests(TestCase):
 
     def test_pawn_moves(self):
         # TODO: en passant
-        self.board.set_board_state([
-            'R..N.RK.',
-            'PP.P.PPP',
-            'n.P.Q.n.',
-            'Bbp..pp.',
-            '...Bp...',
-            '..pp....',
-            'pp...n.p',
-            '.r.qr.k.',
-        ])
+        self.set_test_position_1()
         # white pawns
         self.assertEqual(self.board.pawn_moves(Square('a2')), [[Square('a3'), Square('a4')]])
         self.assertEqual(self.board.pawn_moves(Square('b2')), [[Square('b3'), Square('b4')]])
