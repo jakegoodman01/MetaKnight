@@ -2,11 +2,6 @@ from metaknight.piece import PieceType, Piece, Color
 from typing import List
 
 
-class OutOfBoundsError(Exception):
-    """ Raised when a square is referenced that sits outside of the standard 8x8 chess board"""
-    pass
-
-
 class Square:
     def __init__(self, coordinates: str):
         # A Square will have coordinates '00' if it out of bounds (does not exist in the chess board
