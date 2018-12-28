@@ -69,6 +69,43 @@ class Board:
         """
         self.squares = [[Square(file + rank) for file in Board.files] for rank in Board.ranks]
 
+    def set_board_state(self, board_state: List[str]):
+        """
+        Sets self.squares to the format given by board_state
+        :param board_state: the pieces on each square
+        """
+        self.clear()
+        for i in range(0, 8):
+            for j in range(0, 8):
+                piece = board_state[i][j]
+                if piece == '.':
+                    piece = None
+                elif piece == 'p':
+                    piece = Piece(PieceType.PAWN, Color.WHITE)
+                elif piece == 'n':
+                    piece = Piece(PieceType.KNIGHT, Color.WHITE)
+                elif piece == 'b':
+                    piece = Piece(PieceType.BISHOP, Color.WHITE)
+                elif piece == 'r':
+                    piece = Piece(PieceType.ROOK, Color.WHITE)
+                elif piece == 'q':
+                    piece = Piece(PieceType.QUEEN, Color.WHITE)
+                elif piece == 'k':
+                    piece = Piece(PieceType.KING, Color.WHITE)
+                elif piece == 'P':
+                    piece = Piece(PieceType.PAWN, Color.BLACK)
+                elif piece == 'N':
+                    piece = Piece(PieceType.KNIGHT, Color.BLACK)
+                elif piece == 'B':
+                    piece = Piece(PieceType.BISHOP, Color.BLACK)
+                elif piece == 'R':
+                    piece = Piece(PieceType.ROOK, Color.BLACK)
+                elif piece == 'Q':
+                    piece = Piece(PieceType.QUEEN, Color.BLACK)
+                elif piece == 'K':
+                    piece = Piece(PieceType.KING, Color.BLACK)
+                self.squares[7-i][j].piece = piece
+
     def set_up(self):
         # Pawns
         for i in range(8):
