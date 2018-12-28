@@ -93,4 +93,37 @@ class BoardTests(TestCase):
         bo.clear()
         self.assertEqual(repr(bo), b)
 
+    def test_pawn_moves(self):
+        # TODO: en passant
+        self.board.set_board_state([
+            'R..N.RK.',
+            'PP.P.PPP',
+            'n.P.Q.n.',
+            'Bbp..pp.',
+            '...Bp...',
+            '..pp....',
+            'pp...n.p',
+            '.r.qr.k.',
+        ])
+        # white pawns
+        self.assertEqual(self.board.pawn_moves(Square('a2')), [[Square('a3'), Square('a4')]])
+        self.assertEqual(self.board.pawn_moves(Square('b2')), [[Square('b3'), Square('b4')]])
+        self.assertEqual(self.board.pawn_moves(Square('c3')), [[Square('c4')], [Square('d4')]])
+        self.assertEqual(self.board.pawn_moves(Square('d3')), [])
+        self.assertEqual(self.board.pawn_moves(Square('e4')), [[Square('e5')]])
+        self.assertEqual(self.board.pawn_moves(Square('f5')), [[Square('f6')], [Square('e6')]])
+        self.assertEqual(self.board.pawn_moves(Square('g5')), [])
+        self.assertEqual(self.board.pawn_moves(Square('h2')), [[Square('h3'), Square('h4')]])
+        self.assertEqual(self.board.pawn_moves(Square('c5')), [])
+
+        # black pawns
+        self.assertEqual(self.board.pawn_moves(Square('a7')), [])
+        self.assertEqual(self.board.pawn_moves(Square('b7')), [[Square('b6')], [Square('a6')]])
+        self.assertEqual(self.board.pawn_moves(Square('c6')), [[Square('b5')]])
+        self.assertEqual(self.board.pawn_moves(Square('d7')), [[Square('d6'), Square('d5')]])
+        self.assertEqual(self.board.pawn_moves(Square('f7')), [[Square('f6')], [Square('g6')]])
+        self.assertEqual(self.board.pawn_moves(Square('g7')), [])
+        self.assertEqual(self.board.pawn_moves(Square('h7')), [[Square('h6'), Square('h5')], [Square('g6')]])
+
+
 
