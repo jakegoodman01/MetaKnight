@@ -80,4 +80,17 @@ class BoardTests(TestCase):
             '\n♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ '
         self.assertEqual(repr(Board()), b)
 
+    def test_clear(self):
+        b = '. . . . . . . . ' \
+            '\n. . . . . . . . ' \
+            '\n. . . . . . . . ' \
+            '\n. . . . . . . . ' \
+            '\n. . . . . . . . ' \
+            '\n. . . . . . . . ' \
+            '\n. . . . . . . . ' \
+            '\n. . . . . . . . '
+        bo = Board()
+        bo.clear()
+        self.assertEqual(repr(bo), b)
+
 
