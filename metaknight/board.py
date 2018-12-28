@@ -9,6 +9,7 @@ class OutOfBoundsError(Exception):
 
 class Square:
     def __init__(self, coordinates: str):
+        # A Square will have coordinates '00' if it out of bounds (does not exist in the chess board
         self.file = coordinates[0]
         self.rank = coordinates[1]
         self.piece = None
@@ -20,26 +21,26 @@ class Square:
         return isinstance(other, Square) and other.file == self.file and other.rank == self.rank
 
     def up(self):
-        if self.rank == '8':
-            raise OutOfBoundsError()
+        if self.rank in ('8', '0'):
+            return Square('00')
         next_rank = Board.ranks[Board.ranks.index(self.rank) + 1]
         return Square(self.file + next_rank)
 
     def down(self):
-        if self.rank == '1':
-            raise OutOfBoundsError()
+        if self.rank in ('1', '0'):
+            return Square('00')
         next_rank = Board.ranks[Board.ranks.index(self.rank) - 1]
         return Square(self.file + next_rank)
 
     def left(self):
-        if self.file == 'a':
-            raise OutOfBoundsError()
+        if self.file in ('a', '0'):
+            return Square('00')
         next_file = Board.files[Board.files.index(self.file) - 1]
         return Square(next_file + self.rank)
 
     def right(self):
-        if self.file == 'h':
-            raise OutOfBoundsError()
+        if self.file in ('h', '0'):
+            return Square('00')
         next_file = Board.files[Board.files.index(self.file) + 1]
         return Square(next_file + self.rank)
 
@@ -139,6 +140,9 @@ class Board:
         :param square: a square object that is not located in this board
         :return: the square at location in this board
         """
+        if location == '00' or square == Square('00'):
+            return Square('00')
+
         if location:
             file = Board.files.index(location[0])
             rank = Board.ranks.index(location[1])
@@ -177,68 +181,23 @@ class Board:
         return moves
 
     def knight_moves(self, square: Square) -> List[List[Square]]:
-        # TODO: Make this less horrible :)
         original = self.get_square(square=square)
         color = original.piece.color
-        moves = []
-
-        # upper left
-        try:
-            square = self.get_square(square=original.up().up().left())
-            if not square.piece or square.piece.color is not color:
-                moves.append([square])
-        except OutOfBoundsError:
-            pass
-        # upper right
-        try:
-            square = self.get_square(square=original.up().up().right())
-            if not square.piece or square.piece.color is not color:
-                moves.append([square])
-        except OutOfBoundsError:
-            pass
-        # lower left
-        try:
-            square = self.get_square(square=original.down().down().left())
-            if not square.piece or square.piece.color is not color:
-                moves.append([square])
-        except OutOfBoundsError:
-            pass
-        # lower right
-        try:
-            square = self.get_square(square=original.down().down().right())
-            if not square.piece or square.piece.color is not color:
-                moves.append([square])
-        except OutOfBoundsError:
-            pass
-        # left upper
-        try:
-            square = self.get_square(square=original.left().left().up())
-            if not square.piece or square.piece.color is not color:
-                moves.append([square])
-        except OutOfBoundsError:
-            pass
-        # left lower
-        try:
-            square = self.get_square(square=original.left().left().down())
-            if not square.piece or square.piece.color is not color:
-                moves.append([square])
-        except OutOfBoundsError:
-            pass
-        # right upper
-        try:
-            square = self.get_square(square=original.right().right().up())
-            if not square.piece or square.piece.color is not color:
-                moves.append([square])
-        except OutOfBoundsError:
-            pass
-        # right lower
-        try:
-            square = self.get_square(square=original.right().right().down())
-            if not square.piece or square.piece.color is not color:
-                moves.append([square])
-        except OutOfBoundsError:
-            pass
-        return moves
+        moves = [
+            self.get_square(square=original.up().up().left()),
+            self.get_square(square=original.up().up().right()),
+            self.get_square(square=original.down().down().left()),
+            self.get_square(square=original.down().down().right()),
+            self.get_square(square=original.left().left().up()),
+            self.get_square(square=original.left().left().down()),
+            self.get_square(square=original.right().right().up()),
+            self.get_square(square=original.right().right().down())
+        ]
+        possible_moves = []
+        for move in moves:
+            if move != Square('00') and (not move.piece or move.piece.color is not color):
+                possible_moves.append([move])
+        return possible_moves
 
     def bishop_moves(self, square: Square) -> List[List[Square]]:
         # TODO: Make this less horrible :)
@@ -310,4 +269,3 @@ class Board:
         except OutOfBoundsError:
             moves.append(diagonal.copy())
         return moves
-
