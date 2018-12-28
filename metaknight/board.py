@@ -200,72 +200,23 @@ class Board:
         return possible_moves
 
     def bishop_moves(self, square: Square) -> List[List[Square]]:
-        # TODO: Make this less horrible :)
         moves = []
         original = self.get_square(square=square)
         color = original.piece.color
-        diagonal = []
-        try:
-            # upper left diagonal
-            square = original
-            while True:
-                square = self.get_square(square=square.up())
-                square = self.get_square(square=square.left())
-                if not square.piece:
-                    diagonal.append(square)
-                elif square.piece.color is not color:
-                    diagonal.append(square)
-                    raise OutOfBoundsError
-                else:
-                    raise OutOfBoundsError
-        except OutOfBoundsError:
-            moves.append(diagonal.copy())
-        diagonal = []
-        try:
-            # upper right diagonal
-            square = original
-            while True:
-                square = self.get_square(square=square.up())
-                square = self.get_square(square=square.right())
-                if not square.piece:
-                    diagonal.append(square)
-                elif square.piece.color is not color:
-                    diagonal.append(square)
-                    raise OutOfBoundsError
-                else:
-                    raise OutOfBoundsError
-        except OutOfBoundsError:
-            moves.append(diagonal.copy())
-        diagonal = []
-        try:
-            # lower left diagonal
-            square = original
-            while True:
-                square = self.get_square(square=square.down())
-                square = self.get_square(square=square.left())
-                if not square.piece:
-                    diagonal.append(square)
-                elif square.piece.color is not color:
-                    diagonal.append(square)
-                    raise OutOfBoundsError
-                else:
-                    raise OutOfBoundsError
-        except OutOfBoundsError:
-            moves.append(diagonal.copy())
-        diagonal = []
-        try:
-            # lower right diagonal
-            square = original
-            while True:
-                square = self.get_square(square=square.down())
-                square = self.get_square(square=square.right())
-                if not square.piece:
-                    diagonal.append(square)
-                elif square.piece.color is not color:
-                    diagonal.append(square)
-                    raise OutOfBoundsError
-                else:
-                    raise OutOfBoundsError
-        except OutOfBoundsError:
-            moves.append(diagonal.copy())
+        for func1 in (Square.up, Square.down):
+            for func2 in (Square.left, Square.right):
+                diagonal = []
+                square = original
+                while True:
+                    square = self.get_square(square=func2(func1(square)))
+                    if square == Square('00'):
+                        break
+                    if not square.piece and square != Square('00'):
+                        diagonal.append(square)
+                    elif square.piece.color is not color:
+                        diagonal.append(square)
+                        break
+                    else:
+                        break
+                moves.append(diagonal.copy())
         return moves
