@@ -129,5 +129,15 @@ class BoardTests(TestCase):
         self.assertEqual(self.board.pawn_moves(Square('g7')), [])
         self.assertEqual(self.board.pawn_moves(Square('h7')), [[Square('h6'), Square('h5')], [Square('g6')]])
 
+    def test_knight_moves(self):
+        self.set_test_position_1()
+        # white knights
+        self.assertEqual(self.board.knight_moves(Square('a6')), [[Square('b8')], [Square('b4')], [Square('c7')]])
+        self.assertEqual(self.board.knight_moves(Square('g6')), [[Square('f8')], [Square('h8')], [Square('f4')],
+                                                                 [Square('h4')], [Square('e7')], [Square('e5')]])
+        self.assertEqual(self.board.knight_moves(Square('f2')), [[Square('g4')], [Square('h3')], [Square('h1')]])
+        # black knights
+        self.assertEqual(self.board.knight_moves(Square('d8')), [])
+
 
 
