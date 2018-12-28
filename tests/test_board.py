@@ -1,5 +1,6 @@
 from unittest import TestCase
-from metaknight import Board, Square
+from metaknight.board import Board
+from metaknight.square import Square
 
 
 class SquareTests(TestCase):

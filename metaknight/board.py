@@ -1,43 +1,6 @@
 from metaknight.piece import PieceType, Piece, Color
+from metaknight.square import Square
 from typing import List
-
-
-class Square:
-    def __init__(self, coordinates: str):
-        # A Square will have coordinates '00' if it out of bounds (does not exist in the chess board
-        self.file = coordinates[0]
-        self.rank = coordinates[1]
-        self.piece = None
-
-    def __repr__(self):
-        return f'{self.file}{self.rank}'
-
-    def __eq__(self, other):
-        return isinstance(other, Square) and other.file == self.file and other.rank == self.rank
-
-    def up(self):
-        if self.rank in ('8', '0'):
-            return Square('00')
-        next_rank = Board.ranks[Board.ranks.index(self.rank) + 1]
-        return Square(self.file + next_rank)
-
-    def down(self):
-        if self.rank in ('1', '0'):
-            return Square('00')
-        next_rank = Board.ranks[Board.ranks.index(self.rank) - 1]
-        return Square(self.file + next_rank)
-
-    def left(self):
-        if self.file in ('a', '0'):
-            return Square('00')
-        next_file = Board.files[Board.files.index(self.file) - 1]
-        return Square(next_file + self.rank)
-
-    def right(self):
-        if self.file in ('h', '0'):
-            return Square('00')
-        next_file = Board.files[Board.files.index(self.file) + 1]
-        return Square(next_file + self.rank)
 
 
 class Board:
