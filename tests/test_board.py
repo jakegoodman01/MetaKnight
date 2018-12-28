@@ -74,13 +74,13 @@ class BoardTests(TestCase):
         self.assertEqual(self.board.squares[0][0], Square('a1'))
         self.assertEqual(self.board.squares[7][7], Square('h8'))
 
-    def test_get_square_at_location(self):
-        self.assertEqual(self.board.get_square_at_location('c4'), Square('c4'))
-        self.assertEqual(self.board.get_square_at_location('a1'), Square('a1'))
-        self.assertEqual(self.board.get_square_at_location('a8'), Square('a8'))
-        self.assertEqual(self.board.get_square_at_location('h1'), Square('h1'))
-        self.assertEqual(self.board.get_square_at_location('h8'), Square('h8'))
-        self.assertRaises(ValueError, lambda: self.board.get_square_at_location('a9'))
+    def test_get_square(self):
+        self.assertEqual(self.board.get_square(location='c4'), Square('c4'))
+        self.assertEqual(self.board.get_square(location='a1'), Square('a1'))
+        self.assertEqual(self.board.get_square(location='a8'), Square('a8'))
+        self.assertEqual(self.board.get_square(location='h1'), Square('h1'))
+        self.assertEqual(self.board.get_square(location='h8'), Square('h8'))
+        self.assertRaises(ValueError, lambda: self.board.get_square(location='a9'))
 
     def test_set_up(self):
         b = '♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜ ' \
