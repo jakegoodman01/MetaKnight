@@ -176,7 +176,8 @@ class Board:
                         break
                     else:
                         break
-                moves.append(diagonal.copy())
+                if len(diagonal) >= 1:
+                    moves.append(diagonal.copy())
         return moves
 
     def rook_moves(self, square: Square) -> List[List[Square]]:
@@ -197,7 +198,8 @@ class Board:
                     break
                 else:
                     break
-            moves.append(line.copy())
+            if len(line) >= 1:
+                moves.append(line.copy())
         return moves
 
     def queen_moves(self, square: Square) -> List[List[Square]]:

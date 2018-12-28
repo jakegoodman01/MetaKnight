@@ -143,30 +143,30 @@ class BoardTests(TestCase):
     def test_bishop_moves(self):
         self.set_test_position_1()
         # white bishops
-        self.assertEqual(self.board.bishop_moves(Square('b5')), [[], [Square('c6')], [Square('a4')], [Square('c4')]])
+        self.assertEqual(self.board.bishop_moves(Square('b5')), [[Square('c6')], [Square('a4')], [Square('c4')]])
         # black bishops
-        self.assertEqual(self.board.bishop_moves(Square('a5')), [[], [Square('b6'), Square('c7')], [],
+        self.assertEqual(self.board.bishop_moves(Square('a5')), [[Square('b6'), Square('c7')],
                                                                  [Square('b4'), Square('c3')]])
 
     def test_rook_moves(self):
         self.set_test_position_1()
         # white rooks
-        self.assertEqual(self.board.rook_moves(Square('b1')), [[], [], [Square('a1')], [Square('c1')]])
-        self.assertEqual(self.board.rook_moves(Square('e1')), [[Square('e2'), Square('e3')], [], [], [Square('f1')]])
+        self.assertEqual(self.board.rook_moves(Square('b1')), [[Square('a1')], [Square('c1')]])
+        self.assertEqual(self.board.rook_moves(Square('e1')), [[Square('e2'), Square('e3')], [Square('f1')]])
         # black rooks
-        self.assertEqual(self.board.rook_moves(Square('a8')), [[], [], [], [Square('b8'), Square('c8')]])
-        self.assertEqual(self.board.rook_moves(Square('f8')), [[], [], [Square('e8')], []])
+        self.assertEqual(self.board.rook_moves(Square('a8')), [[Square('b8'), Square('c8')]])
+        self.assertEqual(self.board.rook_moves(Square('f8')), [[Square('e8')]])
 
     def test_queen_moves(self):
         self.set_test_position_1()
         # white queen
         self.assertEqual(self.board.queen_moves(Square('d1')), [
-            [Square('d2')], [], [Square('c1')], [], [Square('c2'), Square('b3'), Square('a4')],
-            [Square('e2'), Square('f3'), Square('g4'), Square('h5')], [], []])
+            [Square('d2')], [Square('c1')], [Square('c2'), Square('b3'), Square('a4')],
+            [Square('e2'), Square('f3'), Square('g4'), Square('h5')]])
         # black queen
         self.assertEqual(self.board.queen_moves(Square('e6')), [
             [Square('e7'), Square('e8')], [Square('e5'), Square('e4')], [Square('d6')], [Square('f6'), Square('g6')],
-            [], [], [Square('d5'), Square('c4'), Square('b3'), Square('a2')], [Square('f5')]])
+            [Square('d5'), Square('c4'), Square('b3'), Square('a2')], [Square('f5')]])
 
     def test_king_moves(self):
         self.set_test_position_1()
