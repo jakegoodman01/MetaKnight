@@ -139,5 +139,10 @@ class BoardTests(TestCase):
         # black knights
         self.assertEqual(self.board.knight_moves(Square('d8')), [])
 
-
-
+    def test_bishop_moves(self):
+        self.set_test_position_1()
+        # white bishops
+        self.assertEqual(self.board.bishop_moves(Square('b5')), [[], [Square('c6')], [Square('a4')], [Square('c4')]])
+        # black bishops
+        self.assertEqual(self.board.bishop_moves(Square('a5')), [[], [Square('b6'), Square('c7')], [],
+                                                                 [Square('b4'), Square('c3')]])
