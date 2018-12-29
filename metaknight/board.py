@@ -4,11 +4,8 @@ from typing import List
 
 
 class Board:
-    files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-    ranks = ['1', '2', '3', '4', '5', '6', '7', '8']
-
     def __init__(self):
-        self.squares = [[Square(file + rank) for file in Board.files] for rank in Board.ranks]
+        self.squares = [[Square(file + rank) for file in Square.files] for rank in Square.ranks]
         self.set_up()
 
     def __repr__(self):
@@ -26,7 +23,7 @@ class Board:
     def clear(self):
         """ This method will only be used for debugging purposes
         """
-        self.squares = [[Square(file + rank) for file in Board.files] for rank in Board.ranks]
+        self.squares = [[Square(file + rank) for file in Square.files] for rank in Square.ranks]
 
     def set_board_state(self, board_state: List[str]):
         """
@@ -102,11 +99,11 @@ class Board:
             return Square('00')
 
         if location:
-            file = Board.files.index(location[0])
-            rank = Board.ranks.index(location[1])
+            file = Square.files.index(location[0])
+            rank = Square.ranks.index(location[1])
         elif square:
-            file = Board.files.index(square.file)
-            rank = Board.ranks.index(square.rank)
+            file = Square.files.index(square.file)
+            rank = Square.ranks.index(square.rank)
         else:
             raise ValueError('Must enter either a string location, or a Square object')
         return self.squares[rank][file]
