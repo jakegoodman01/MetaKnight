@@ -5,7 +5,7 @@ from typing import List
 
 class Board:
     def __init__(self):
-        self.squares = [[Square(file + rank) for file in Square.files] for rank in Square.ranks]
+        self.squares: List[List[Square]] = [[Square(file + rank) for file in Square.files] for rank in Square.ranks]
         self.set_up()
 
     def __repr__(self):
