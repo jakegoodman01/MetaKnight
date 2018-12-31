@@ -47,3 +47,8 @@ class Piece:
                 return '\u265b'
             if self.piece_type is PieceType.KING:
                 return '\u265a'
+
+    def __eq__(self, other):
+        return isinstance(other, Piece) and \
+               other.piece_type == self.piece_type and \
+               other.color == self.color
