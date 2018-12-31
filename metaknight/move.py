@@ -9,9 +9,10 @@ class Move:
         self.destination: Square = None  # the square at which the piece was moved to
         self.check: bool = False  # True if the move results in a check
 
-        self._find_origin(board, notation, to_move)
+        self._set_origin(board, notation, to_move)
+        self._set_destination(board, notation, to_move)
 
-    def _find_origin(self, board: Board, notation: str, to_move: Color):
+    def _set_origin(self, board: Board, notation: str, to_move: Color):
         increment = -1 if to_move is Color.WHITE else 1
         if len(notation) == 2:
             # A pawn simply advanced
@@ -36,6 +37,9 @@ class Move:
             else:
                 # A piece was moved
                 pass
+
+    def _set_destination(self, board: Board, notation: str, to_move: Color):
+        self.destination = board.get_square(location=notation[-2:])
 
 
 
