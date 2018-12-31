@@ -16,7 +16,7 @@ class TestMove(TestCase):
             '...Bp...',
             '..pp....',
             'pp...n.p',
-            '.r.qr.k.',
+            '.r.qr.kb',
         ])
 
         # Pawn moves
@@ -31,6 +31,9 @@ class TestMove(TestCase):
         self.knight_move_3 = Move(self.board, 'Nf7', Color.BLACK)
 
         # Bishop moves
+        self.bishop_move_1 = Move(self.board, 'Bf3', Color.WHITE)
+        self.bishop_move_2 = Move(self.board, 'Bxc3', Color.BLACK)
+        self.bishop_move_3 = Move(self.board, 'Be5', Color.BLACK)
 
         # Rook moves
 
@@ -65,3 +68,13 @@ class TestMove(TestCase):
         self.assertEqual(self.knight_move_1.destination, Square('c5'))
         self.assertEqual(self.knight_move_2.destination, Square('g4'))
         self.assertEqual(self.knight_move_3.destination, Square('f7'))
+
+    def test_bishop_moves(self):
+        self.assertEqual(self.bishop_move_1.origin, Square('h1'))
+        self.assertEqual(self.bishop_move_2.origin, Square('d4'))
+        self.assertEqual(self.bishop_move_3.origin, Square('d4'))
+        self.assertRaises(InvalidNotationError, lambda: Move(self.board, 'Nf4', Color.WHITE))
+
+        self.assertEqual(self.bishop_move_1.destination, Square('f3'))
+        self.assertEqual(self.bishop_move_2.destination, Square('c3'))
+        self.assertEqual(self.bishop_move_3.destination, Square('e5'))
