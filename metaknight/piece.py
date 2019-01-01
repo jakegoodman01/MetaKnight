@@ -14,6 +14,11 @@ class Color(Enum):
     WHITE = 0
     BLACK = 1
 
+    def switch(self):
+        if self.value == 0:
+            return Color.BLACK
+        return Color.WHITE
+
 
 class Piece:
     def __init__(self, piece_type: PieceType, color: Color):
