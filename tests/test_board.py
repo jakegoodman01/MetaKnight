@@ -62,60 +62,60 @@ class BoardTests(TestCase):
         # TODO: en passant
         self.set_test_position_1()
         # white pawns
-        self.assertEqual(self.board.pawn_moves(Square('a2')), [[Square('a3'), Square('a4')]])
-        self.assertEqual(self.board.pawn_moves(Square('b2')), [[Square('b3'), Square('b4')]])
-        self.assertEqual(self.board.pawn_moves(Square('c3')), [[Square('c4')], [Square('d4')]])
-        self.assertEqual(self.board.pawn_moves(Square('d3')), [])
-        self.assertEqual(self.board.pawn_moves(Square('e4')), [[Square('e5')]])
-        self.assertEqual(self.board.pawn_moves(Square('f5')), [[Square('f6')], [Square('e6')]])
-        self.assertEqual(self.board.pawn_moves(Square('g5')), [])
-        self.assertEqual(self.board.pawn_moves(Square('h2')), [[Square('h3'), Square('h4')]])
-        self.assertEqual(self.board.pawn_moves(Square('c5')), [])
+        self.assertEqual(self.board._pawn_moves(Square('a2')), [[Square('a3'), Square('a4')]])
+        self.assertEqual(self.board._pawn_moves(Square('b2')), [[Square('b3'), Square('b4')]])
+        self.assertEqual(self.board._pawn_moves(Square('c3')), [[Square('c4')], [Square('d4')]])
+        self.assertEqual(self.board._pawn_moves(Square('d3')), [])
+        self.assertEqual(self.board._pawn_moves(Square('e4')), [[Square('e5')]])
+        self.assertEqual(self.board._pawn_moves(Square('f5')), [[Square('f6')], [Square('e6')]])
+        self.assertEqual(self.board._pawn_moves(Square('g5')), [])
+        self.assertEqual(self.board._pawn_moves(Square('h2')), [[Square('h3'), Square('h4')]])
+        self.assertEqual(self.board._pawn_moves(Square('c5')), [])
 
         # black pawns
-        self.assertEqual(self.board.pawn_moves(Square('a7')), [])
-        self.assertEqual(self.board.pawn_moves(Square('b7')), [[Square('b6')], [Square('a6')]])
-        self.assertEqual(self.board.pawn_moves(Square('c6')), [[Square('b5')]])
-        self.assertEqual(self.board.pawn_moves(Square('d7')), [[Square('d6'), Square('d5')]])
-        self.assertEqual(self.board.pawn_moves(Square('f7')), [[Square('f6')], [Square('g6')]])
-        self.assertEqual(self.board.pawn_moves(Square('g7')), [])
-        self.assertEqual(self.board.pawn_moves(Square('h7')), [[Square('h6'), Square('h5')], [Square('g6')]])
+        self.assertEqual(self.board._pawn_moves(Square('a7')), [])
+        self.assertEqual(self.board._pawn_moves(Square('b7')), [[Square('b6')], [Square('a6')]])
+        self.assertEqual(self.board._pawn_moves(Square('c6')), [[Square('b5')]])
+        self.assertEqual(self.board._pawn_moves(Square('d7')), [[Square('d6'), Square('d5')]])
+        self.assertEqual(self.board._pawn_moves(Square('f7')), [[Square('f6')], [Square('g6')]])
+        self.assertEqual(self.board._pawn_moves(Square('g7')), [])
+        self.assertEqual(self.board._pawn_moves(Square('h7')), [[Square('h6'), Square('h5')], [Square('g6')]])
 
     def test_knight_moves(self):
         self.set_test_position_1()
         # white knights
-        self.assertEqual(self.board.knight_moves(Square('a6')), [[Square('b8')], [Square('b4')], [Square('c7')]])
-        self.assertEqual(self.board.knight_moves(Square('g6')), [[Square('f8')], [Square('h8')], [Square('f4')],
-                                                                 [Square('h4')], [Square('e7')], [Square('e5')]])
-        self.assertEqual(self.board.knight_moves(Square('f2')), [[Square('g4')], [Square('h3')], [Square('h1')]])
+        self.assertEqual(self.board._knight_moves(Square('a6')), [[Square('b8')], [Square('b4')], [Square('c7')]])
+        self.assertEqual(self.board._knight_moves(Square('g6')), [[Square('f8')], [Square('h8')], [Square('f4')],
+                                                                  [Square('h4')], [Square('e7')], [Square('e5')]])
+        self.assertEqual(self.board._knight_moves(Square('f2')), [[Square('g4')], [Square('h3')], [Square('h1')]])
         # black knights
-        self.assertEqual(self.board.knight_moves(Square('d8')), [])
+        self.assertEqual(self.board._knight_moves(Square('d8')), [])
 
     def test_bishop_moves(self):
         self.set_test_position_1()
         # white bishops
-        self.assertEqual(self.board.bishop_moves(Square('b5')), [[Square('c6')], [Square('a4')], [Square('c4')]])
+        self.assertEqual(self.board._bishop_moves(Square('b5')), [[Square('c6')], [Square('a4')], [Square('c4')]])
         # black bishops
-        self.assertEqual(self.board.bishop_moves(Square('a5')), [[Square('b6'), Square('c7')],
-                                                                 [Square('b4'), Square('c3')]])
+        self.assertEqual(self.board._bishop_moves(Square('a5')), [[Square('b6'), Square('c7')],
+                                                                  [Square('b4'), Square('c3')]])
 
     def test_rook_moves(self):
         self.set_test_position_1()
         # white rooks
-        self.assertEqual(self.board.rook_moves(Square('b1')), [[Square('a1')], [Square('c1')]])
-        self.assertEqual(self.board.rook_moves(Square('e1')), [[Square('e2'), Square('e3')], [Square('f1')]])
+        self.assertEqual(self.board._rook_moves(Square('b1')), [[Square('a1')], [Square('c1')]])
+        self.assertEqual(self.board._rook_moves(Square('e1')), [[Square('e2'), Square('e3')], [Square('f1')]])
         # black rooks
-        self.assertEqual(self.board.rook_moves(Square('a8')), [[Square('b8'), Square('c8')]])
-        self.assertEqual(self.board.rook_moves(Square('f8')), [[Square('e8')]])
+        self.assertEqual(self.board._rook_moves(Square('a8')), [[Square('b8'), Square('c8')]])
+        self.assertEqual(self.board._rook_moves(Square('f8')), [[Square('e8')]])
 
     def test_queen_moves(self):
         self.set_test_position_1()
         # white queen
-        self.assertEqual(self.board.queen_moves(Square('d1')), [
+        self.assertEqual(self.board._queen_moves(Square('d1')), [
             [Square('d2')], [Square('c1')], [Square('c2'), Square('b3'), Square('a4')],
             [Square('e2'), Square('f3'), Square('g4'), Square('h5')]])
         # black queen
-        self.assertEqual(self.board.queen_moves(Square('e6')), [
+        self.assertEqual(self.board._queen_moves(Square('e6')), [
             [Square('e7'), Square('e8')], [Square('e5'), Square('e4')], [Square('d6')], [Square('f6'), Square('g6')],
             [Square('d5'), Square('c4'), Square('b3'), Square('a2')], [Square('f5')]])
 
@@ -123,6 +123,6 @@ class BoardTests(TestCase):
         self.set_test_position_1()
         print(self.board)
         # white king
-        self.assertEqual(self.board.king_moves(Square('g1')), [[Square('g2')], [Square('h1')], [Square('f1')]])
+        self.assertEqual(self.board._king_moves(Square('g1')), [[Square('g2')], [Square('h1')], [Square('f1')]])
         # black king
-        self.assertEqual(self.board.king_moves(Square('g8')), [[Square('h8')]])
+        self.assertEqual(self.board._king_moves(Square('g8')), [[Square('h8')]])

@@ -108,7 +108,22 @@ class Board:
             raise ValueError('Must enter either a string location, or a Square object')
         return self.squares[rank][file]
 
-    def pawn_moves(self, square: Square) -> List[List[Square]]:
+    def get_moves(self, location=None, square=None) -> List[List[Square]]:
+        square = self.get_square(location=location, square=square)
+        if square.piece.piece_type is PieceType.PAWN:
+            return self._knight_moves(square=square)
+        elif square.piece.piece_type is PieceType.KNIGHT:
+            return self._knight_moves(square=square)
+        elif square.piece.piece_type is PieceType.BISHOP:
+            return self._bishop_moves(square=square)
+        elif square.piece.piece_type is PieceType.ROOK:
+            return self._rook_moves(square=square)
+        elif square.piece.piece_type is PieceType.QUEEN:
+            return self._queen_moves(square=square)
+        elif square.piece.piece_type is PieceType.KING:
+            return self._king_moves(square=square)
+
+    def _pawn_moves(self, square: Square) -> List[List[Square]]:
         # TODO: Account for en passant
         moves = []
         square = self.get_square(square=square)
@@ -135,7 +150,7 @@ class Board:
                 moves.append([diagonal])
         return moves
 
-    def knight_moves(self, square: Square) -> List[List[Square]]:
+    def _knight_moves(self, square: Square) -> List[List[Square]]:
         original = self.get_square(square=square)
         color = original.piece.color
         moves = [
@@ -154,7 +169,7 @@ class Board:
                 possible_moves.append([move])
         return possible_moves
 
-    def bishop_moves(self, square: Square) -> List[List[Square]]:
+    def _bishop_moves(self, square: Square) -> List[List[Square]]:
         moves = []
         original = self.get_square(square=square)
         color = original.piece.color
@@ -177,7 +192,7 @@ class Board:
                     moves.append(diagonal.copy())
         return moves
 
-    def rook_moves(self, square: Square) -> List[List[Square]]:
+    def _rook_moves(self, square: Square) -> List[List[Square]]:
         moves = []
         original = self.get_square(square=square)
         color = original.piece.color
@@ -199,10 +214,10 @@ class Board:
                 moves.append(line.copy())
         return moves
 
-    def queen_moves(self, square: Square) -> List[List[Square]]:
-        return self.rook_moves(square) + self.bishop_moves(square)
+    def _queen_moves(self, square: Square) -> List[List[Square]]:
+        return self._rook_moves(square) + self._bishop_moves(square)
 
-    def king_moves(self, square: Square) -> List[List[Square]]:
+    def _king_moves(self, square: Square) -> List[List[Square]]:
         original = self.get_square(square=square)
         color = original.piece.color
         moves = [
@@ -220,3 +235,5 @@ class Board:
             if move != Square('00') and (not move.piece or move.piece.color is not color):
                 possible_moves.append([move])
         return possible_moves
+
+

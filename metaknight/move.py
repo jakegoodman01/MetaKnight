@@ -42,25 +42,20 @@ class Move:
             self.origin = board.get_square(location=f'{file}{rank + increment}')
         elif len(notation) == 4 or len(notation) == 3:
             # A piece was moved, or there was a capture
-            move_func = board.knight_moves
             piece_moved = PieceType.KNIGHT
             if notation[0] == 'B':
-                move_func = board.bishop_moves
                 piece_moved = PieceType.BISHOP
             elif notation[0] == 'R':
-                move_func = board.rook_moves
                 piece_moved = PieceType.ROOK
             elif notation[0] == 'Q':
-                move_func = board.queen_moves
                 piece_moved = PieceType.QUEEN
             elif notation[0] == 'K':
-                move_func = board.king_moves
                 piece_moved = PieceType.KING
 
             for rank in board.squares:
                 for square in rank:
                     if square.piece == Piece(piece_moved, to_move):
-                        moves = move_func(square)
+                        moves = board.get_moves(square=square)
                         for direction in moves:
                             for move in direction:
                                 if move == self.destination:
