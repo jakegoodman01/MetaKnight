@@ -1,6 +1,7 @@
 from unittest import TestCase
 from metaknight.board import Board
 from metaknight.square import Square
+from metaknight.piece import Color
 
 
 class BoardTests(TestCase):
@@ -18,6 +19,19 @@ class BoardTests(TestCase):
             '..pp....',
             'pp...n.p',
             '.r.qr.k.',
+        ])
+
+    def set_test_position_2(self):
+        # This is a board state that I use to test certain functions
+        self.board.set_board_state([
+            '........',
+            '..K..r..',
+            '........',
+            '........',
+            '........',
+            '...N.k..',
+            '........',
+            '........',
         ])
 
     def test_board_construction(self):
@@ -121,8 +135,12 @@ class BoardTests(TestCase):
 
     def test_king_moves(self):
         self.set_test_position_1()
-        print(self.board)
         # white king
         self.assertEqual(self.board._king_moves(Square('g1')), [[Square('g2')], [Square('h1')], [Square('f1')]])
         # black king
         self.assertEqual(self.board._king_moves(Square('g8')), [[Square('h8')]])
+
+    def test_in_check(self):
+        self.set_test_position_2()
+        self.assertEqual(self.board.in_check(Color.BLACK), True)
+        self.assertEqual(self.board.in_check(Color.WHITE), False)
