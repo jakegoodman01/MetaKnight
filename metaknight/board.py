@@ -236,4 +236,28 @@ class Board:
                 possible_moves.append([move])
         return possible_moves
 
+    def in_check(self, color: Color) -> bool:
+        """
+        Checks if the king of the specified color is in check
+        :param color: the color of the king under inspection
+        :return: true if the king is in check, of the specified color
+        """
+        king_location: Square = None
+        for row in self.squares:
+            for square in row:
+                if square.piece == Piece(PieceType.KING, color):
+                    king_location = square
+
+        for row in self.squares:
+            for square in row:
+                if square.piece and square.piece.color != color:
+                    # The piece on this square is of the opposite color, and could possible pose a check
+                    moves = self.get_moves(square=square)
+                    for direction in moves:
+                        for move in direction:
+                            if move == king_location:
+                                return True
+        return False
+
+
 
