@@ -14,7 +14,7 @@ class TestMove(TestCase):
             'n.P.QP..',
             'BbP..pp.',
             '...Bp...',
-            '..pp....',
+            '..ppN...',
             'pp...n.p',
             '.r.qr.kb',
         ])
@@ -36,10 +36,19 @@ class TestMove(TestCase):
         self.bishop_move_3 = Move(self.board, 'Be5', Color.BLACK)
 
         # Rook moves
+        self.rook_move_1 = Move(self.board, 'Rc1', Color.WHITE)
+        self.rook_move_2 = Move(self.board, 'Rf7', Color.BLACK)
+        self.rook_move_3 = Move(self.board, 'Rxe3', Color.WHITE)
 
         # Queen moves
+        self.queen_move_1 = Move(self.board, 'Qd2', Color.WHITE)
+        self.queen_move_2 = Move(self.board, 'Qxe4', Color.BLACK)
+        self.queen_move_3 = Move(self.board, 'Qh5', Color.WHITE)
 
         # King moves
+        self.king_move_1 = Move(self.board, 'Kg2', Color.WHITE)
+        self.king_move_2 = Move(self.board, 'Kh7', Color.BLACK)
+        self.king_move_3 = Move(self.board, 'Kf1', Color.WHITE)
 
     def test_pawn_moves(self):
         self.assertEqual(self.pawn_move_1.origin, Square('a2'))
@@ -73,8 +82,38 @@ class TestMove(TestCase):
         self.assertEqual(self.bishop_move_1.origin, Square('h1'))
         self.assertEqual(self.bishop_move_2.origin, Square('d4'))
         self.assertEqual(self.bishop_move_3.origin, Square('d4'))
-        self.assertRaises(InvalidNotationError, lambda: Move(self.board, 'Nf4', Color.WHITE))
+        self.assertRaises(InvalidNotationError, lambda: Move(self.board, 'Bb4', Color.WHITE))
 
         self.assertEqual(self.bishop_move_1.destination, Square('f3'))
         self.assertEqual(self.bishop_move_2.destination, Square('c3'))
         self.assertEqual(self.bishop_move_3.destination, Square('e5'))
+
+    def test_rook_moves(self):
+        self.assertEqual(self.rook_move_1.origin, Square('b1'))
+        self.assertEqual(self.rook_move_2.origin, Square('f8'))
+        self.assertEqual(self.rook_move_3.origin, Square('e1'))
+        self.assertRaises(InvalidNotationError, lambda: Move(self.board, 'Rb3', Color.WHITE))
+
+        self.assertEqual(self.rook_move_1.destination, Square('c1'))
+        self.assertEqual(self.rook_move_2.destination, Square('f7'))
+        self.assertEqual(self.rook_move_3.destination, Square('e3'))
+
+    def test_queen_moves(self):
+        self.assertEqual(self.queen_move_1.origin, Square('d1'))
+        self.assertEqual(self.queen_move_2.origin, Square('e6'))
+        self.assertEqual(self.queen_move_3.origin, Square('d1'))
+        self.assertRaises(InvalidNotationError, lambda: Move(self.board, 'Qg4', Color.BLACK))
+
+        self.assertEqual(self.queen_move_1.destination, Square('d2'))
+        self.assertEqual(self.queen_move_2.destination, Square('e4'))
+        self.assertEqual(self.queen_move_3.destination, Square('h5'))
+
+    def test_king_moves(self):
+        self.assertEqual(self.king_move_1.origin, Square('g1'))
+        self.assertEqual(self.king_move_2.origin, Square('h8'))
+        self.assertEqual(self.king_move_3.origin, Square('g1'))
+        self.assertRaises(InvalidNotationError, lambda: Move(self.board, 'Kh6', Color.BLACK))
+
+        self.assertEqual(self.king_move_1.destination, Square('g2'))
+        self.assertEqual(self.king_move_2.destination, Square('h7'))
+        self.assertEqual(self.king_move_3.destination, Square('f1'))
