@@ -5,6 +5,7 @@ from typing import List
 
 
 class Game:
+    # TODO: test me
     def __init__(self):
         self.board: Board = Board()
         self.game_history: List[Move] = []
@@ -14,8 +15,7 @@ class Game:
         self.black_captured: List[PieceType] = []  # All captured black pieces
 
     def play_move(self, notation):
-        move = Move(self.board, notation, self.to_move)
-        piece_moved = self.board.get_square(square=move.origin).piece
+        move = Move(self.board, notation, self.to_move, self.en_passant_file())
         self.board.get_square(square=move.origin).piece = None
 
         if self.board.get_square(square=move.destination).piece:
@@ -25,8 +25,24 @@ class Game:
                 self.black_captured.append(captured)
             else:
                 self.white_captured.append(captured)
-        self.board.get_square(square=move.destination).piece = piece_moved
+        self.board.get_square(square=move.destination).piece = move.piece_moved
 
         self.to_move = self.to_move.switch()
         self.game_history.append(move)
+
+    def en_passant_file(self) -> str:
+        """
+        :return: The file of a pawn that advanced forward two squares, legalizing en passant. None if no pawn did this
+        """
+        if len(self.game_history) > 1:
+            last_move = self.game_history[-1]
+            piece_moved = last_move.piece_moved.piece_type
+            origin_rank = int(last_move.origin.rank)
+            destination_rank = int(last_move.destination.rank)
+            increment = 2 if self.to_move is Color.BLACK else -2
+
+            if piece_moved is PieceType.PAWN and origin_rank + increment == destination_rank:
+                return last_move.origin.file
+
+
 

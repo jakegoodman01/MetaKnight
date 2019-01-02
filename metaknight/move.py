@@ -8,29 +8,30 @@ class InvalidNotationError(Exception):
 
 
 class Move:
-    def __init__(self, board: Board, notation: str, to_move: Color, en_passant_legal: bool=False):
+    def __init__(self, board: Board, notation: str, to_move: Color, en_passant_file: str=None):
         self.origin: Square = None  # the square at which the piece began
         self.destination: Square = None  # the square at which the piece was moved to
         self.check: bool = False  # True if the move results in a check
 
-        self._set_destination(board, notation, to_move, en_passant_legal)
+        self._set_destination(board, notation, to_move, en_passant_file)
         self._set_origin(board, notation, to_move)
+        self.piece_moved: Piece = self.origin.piece
 
-    def _set_destination(self, board: Board, notation: str, to_move: Color, en_passant_legal: bool):
+    def _set_destination(self, board: Board, notation: str, to_move: Color, en_passant_legal: str):
 
         if 'x' in notation and board.get_square(location=notation[-2:]).piece is None:
             # A piece made a capture on a square that has no piece!
             # This is an invalid notation, unless en passant happened here
             if len(notation) == 4 and 97 <= ord(notation[0]) <= 104:
                 # A pawn made the capture
-                if notation[3] == '6' and to_move  == Color.WHITE or notation[3] == '3' and to_move == Color.BLACK:
+                if notation[3] == '6' and to_move == Color.WHITE or notation[3] == '3' and to_move == Color.BLACK:
                     # The capture was made on the right rank for en passant
                     file = notation[2]
                     rank = int(notation[3]) + 1 if to_move == Color.BLACK else int(notation[3]) - 1
                     square = board.get_square(location=f'{file}{rank}')  # a pawn of opposite color should be here
                     if square.piece and square.piece.color != to_move:
                         # The board conditions for en passant were met
-                        if en_passant_legal:
+                        if en_passant_legal and en_passant_legal == square.file:
                             self.destination = board.get_square(location=notation[-2:])
                             board.get_square(square=square).piece = None
                             return
