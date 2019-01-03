@@ -2,7 +2,7 @@ from metaknight.board import Board
 from metaknight.square import Square
 from metaknight.piece import Color, Piece, PieceType
 
-from copy import copy
+from copy import deepcopy
 
 
 class InvalidNotationError(Exception):
@@ -97,7 +97,7 @@ class Move:
         :return: None
         """
 
-        board_copy = copy(board)
+        board_copy = deepcopy(board)
         board_copy.get_square(square=self.origin).piece = None
         board_copy.get_square(square=self.destination).piece = self.piece_moved
 
