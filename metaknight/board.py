@@ -111,7 +111,7 @@ class Board:
     def get_moves(self, location=None, square=None) -> List[List[Square]]:
         square = self.get_square(location=location, square=square)
         if square.piece.piece_type is PieceType.PAWN:
-            return self._knight_moves(square=square)
+            return self._pawn_moves(square=square)
         elif square.piece.piece_type is PieceType.KNIGHT:
             return self._knight_moves(square=square)
         elif square.piece.piece_type is PieceType.BISHOP:
