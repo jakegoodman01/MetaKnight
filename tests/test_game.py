@@ -34,3 +34,18 @@ class TestGame(TestCase):
         self.assertRaises(InvalidNotationError, lambda: self.game.play_move('gxh3'))
         self.game.play_move('gxf3')
 
+    def test_check_situations(self):
+        self.game.play_move('d4')
+        self.game.play_move('e5')
+        self.game.play_move('h3')
+        self.game.play_move('Bb4')
+        self.assertRaises(InvalidNotationError, lambda: self.game.play_move('Qd3'))
+        self.game.play_move('Nc3')
+        self.game.play_move('Bxc3')
+        self.assertRaises(InvalidNotationError, lambda: self.game.play_move('Kd2'))
+        self.game.play_move('Bd2')
+        self.game.play_move('Qh4')
+        self.assertRaises(InvalidNotationError, lambda: self.game.play_move('f4'))
+        self.assertRaises(InvalidNotationError, lambda: self.game.play_move('f3'))
+        self.assertRaises(InvalidNotationError, lambda: self.game.play_move('Be3'))
+        self.assertRaises(InvalidNotationError, lambda: self.game.play_move('Bc1'))
