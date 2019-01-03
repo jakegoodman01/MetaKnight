@@ -2,6 +2,8 @@ from metaknight.board import Board
 from metaknight.square import Square
 from metaknight.piece import Color, Piece, PieceType
 
+from copy import copy
+
 
 class InvalidNotationError(Exception):
     pass
@@ -16,6 +18,8 @@ class Move:
         self._set_destination(board, notation, to_move, en_passant_file)
         self._set_origin(board, notation, to_move)
         self.piece_moved: Piece = self.origin.piece
+
+        self._not_in_check(board, to_move)
 
     def _set_destination(self, board: Board, notation: str, to_move: Color, en_passant_legal: str):
 
@@ -84,5 +88,22 @@ class Move:
 
         if not self.origin or not self.origin.piece or self.origin.piece != Piece(piece_moved, to_move):
             raise InvalidNotationError()
+
+    def _not_in_check(self, board: Board, to_move: Color):
+        """
+        This function simulates the new board state if the desired move is executed. If the new board state
+        has a check in it, I throw an InvalidNotationError
+        :param board: The board state of the current move
+        :return: None
+        """
+
+        board_copy = copy(board)
+        board_copy.get_square(square=self.origin).piece = None
+        board_copy.get_square(square=self.destination).piece = self.piece_moved
+
+        if board_copy.in_check(to_move):
+            raise InvalidNotationError('This move puts you in check')
+
+
 
 
