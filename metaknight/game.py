@@ -9,15 +9,31 @@ class Game:
     def __init__(self):
         self.board: Board = Board()
         self.game_history: List[Move] = []
-        self.to_move = Color.WHITE
+        self.to_move: Color = Color.WHITE
+
+        # For the following variables, the 0th index represents white, and the 1st index represents black
+        self.a_rook_moved = [False, False]
+        self.h_rook_moved = [False, False]
+        self.king_moved = [False, False]
 
         self.white_captured: List[PieceType] = []  # All captured white pieces
         self.black_captured: List[PieceType] = []  # All captured black pieces
 
     def play_move(self, notation):
-        move = Move(self.board, notation, self.to_move, self.en_passant_file())
-        self.board.get_square(square=move.origin).piece = None
+        move = Move(self.board, notation, self.to_move, en_passant_file=self.en_passant_file(),
+                    king_moved=self.king_moved[self.to_move.value],
+                    h_rook_moved=self.h_rook_moved[self.to_move.value],
+                    a_rook_moved=self.a_rook_moved[self.to_move.value])
 
+        if move.piece_moved.piece_type == PieceType.KING:
+            self.king_moved[self.to_move.value] = True
+        elif move.piece_moved.piece_type == PieceType.ROOK:
+            if move.origin.file == 'a':
+                self.a_rook_moved[self.to_move.value] = True
+            elif move.origin.file == 'h':
+                self.h_rook_moved[self.to_move.value] = True
+
+        self.board.get_square(square=move.origin).piece = None
         if self.board.get_square(square=move.destination).piece:
             # If there was a capture
             captured = self.board.get_square(square=move.destination).piece.piece_type
