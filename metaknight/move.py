@@ -17,13 +17,16 @@ class Move:
 
         if notation == 'O-O':
             self.castle(board, to_move, king_moved, h_rook_moved)
+            self.piece_moved: Piece = self.origin.piece
             self._not_in_check(board, to_move)
-            
+
             # moving the rook
             board.get_square(location='h1').piece = None
             board.get_square(location='f1').piece = Piece(PieceType.ROOK, to_move)
         elif notation == 'O-O-O':
             self.long_castle(board, to_move, king_moved, a_rook_moved)
+            self.piece_moved: Piece = self.origin.piece
+            self._not_in_check(board, to_move)
 
             # moving the rook
             board.get_square(location='a1').piece = None
