@@ -14,7 +14,7 @@ class TestMove(TestCase):
             'n.P.QP..',
             'BbP..pp.',
             '...Bp...',
-            '..ppN...',
+            '..ppP...',
             'pp...n.p',
             '.r.qr.kb',
         ])
@@ -60,13 +60,6 @@ class TestMove(TestCase):
         self.assertEqual(self.pawn_move_2.destination, Square('a3'))
         self.assertEqual(self.pawn_move_3.destination, Square('d4'))
         self.assertEqual(self.pawn_move_4.destination, Square('b6'))
-
-        """
-        self.assertEqual(self.pawn_move_1.check, False)
-        self.assertEqual(self.pawn_move_2.check, False)
-        self.assertEqual(self.pawn_move_3.check, False)
-        self.assertEqual(self.pawn_move_4.check, False)
-        """
 
     def test_knight_moves(self):
         self.assertEqual(self.knight_move_1.origin, Square('a6'))
