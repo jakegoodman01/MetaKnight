@@ -14,23 +14,23 @@ class Move:
                  king_moved: bool=False, h_rook_moved: bool=False, a_rook_moved: bool=False):
         self.origin: Square = None  # the square at which the piece began
         self.destination: Square = None  # the square at which the piece was moved to
-
+        rank = '1' if to_move is Color.WHITE else '8'
         if notation == 'O-O':
             self.castle(board, to_move, king_moved, h_rook_moved)
             self.piece_moved: Piece = self.origin.piece
             self._not_in_check(board, to_move)
 
             # moving the rook
-            board.get_square(location='h1').piece = None
-            board.get_square(location='f1').piece = Piece(PieceType.ROOK, to_move)
+            board.get_square(location=f'h{rank}').piece = None
+            board.get_square(location=f'f{rank}').piece = Piece(PieceType.ROOK, to_move)
         elif notation == 'O-O-O':
             self.long_castle(board, to_move, king_moved, a_rook_moved)
             self.piece_moved: Piece = self.origin.piece
             self._not_in_check(board, to_move)
 
             # moving the rook
-            board.get_square(location='a1').piece = None
-            board.get_square(location='d1').piece = Piece(PieceType.ROOK, to_move)
+            board.get_square(location=f'a{rank}').piece = None
+            board.get_square(location=f'd{rank}').piece = Piece(PieceType.ROOK, to_move)
         else:
             self._set_destination(board, notation, to_move, en_passant_file)
             self._set_origin(board, notation, to_move)
@@ -153,10 +153,10 @@ class Move:
         if board.in_check(to_move):
             raise InvalidNotationError('Cannot castle out of check')
 
-        Move(board, 'Kf1', to_move)
+        Move(board, f'Kf{rank}', to_move)
         # if the line above did not throw an exception, then the king would not castle through check
-        self.origin = board.get_square(location='e1')
-        self.destination = board.get_square(location='g1')
+        self.origin = board.get_square(location=f'e{rank}')
+        self.destination = board.get_square(location=f'g{rank}')
 
     def long_castle(self, board: Board, to_move: Color, king_moved: bool, rook_moved: bool):
         """
@@ -182,7 +182,7 @@ class Move:
         if board.in_check(to_move):
             raise InvalidNotationError('Cannot castle out of check')
 
-        Move(board, 'Kd1', to_move)
+        Move(board, f'Kd{rank}', to_move)
         # if the line above did not throw an exception, then the king would not castle through check
-        self.origin = board.get_square(location='e1')
-        self.destination = board.get_square(location='c1')
+        self.origin = board.get_square(location=f'e{rank}')
+        self.destination = board.get_square(location=f'c{rank}')
