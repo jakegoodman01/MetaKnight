@@ -10,19 +10,31 @@ class InvalidNotationError(Exception):
 
 
 class Move:
-    def __init__(self, board: Board, notation: str, to_move: Color, en_passant_file: str=None):
+    def __init__(self, board: Board, notation: str, to_move: Color, en_passant_file: str=None,
+                 king_moved: bool=False, h_rook_moved: bool=False, a_rook_moved: bool=False):
         self.origin: Square = None  # the square at which the piece began
         self.destination: Square = None  # the square at which the piece was moved to
-        self.check: bool = False  # True if the move results in a check
 
-        self._set_destination(board, notation, to_move, en_passant_file)
-        self._set_origin(board, notation, to_move)
-        self.piece_moved: Piece = self.origin.piece
+        if notation == 'O-O':
+            self.castle(board, to_move, king_moved, h_rook_moved)
+            self._not_in_check(board, to_move)
+            
+            # moving the rook
+            board.get_square(location='h1').piece = None
+            board.get_square(location='f1').piece = Piece(PieceType.ROOK, to_move)
+        elif notation == 'O-O-O':
+            self.long_castle(board, to_move, king_moved, a_rook_moved)
 
-        self._not_in_check(board, to_move)
+            # moving the rook
+            board.get_square(location='a1').piece = None
+            board.get_square(location='d1').piece = Piece(PieceType.ROOK, to_move)
+        else:
+            self._set_destination(board, notation, to_move, en_passant_file)
+            self._set_origin(board, notation, to_move)
+            self.piece_moved: Piece = self.origin.piece
+            self._not_in_check(board, to_move)
 
     def _set_destination(self, board: Board, notation: str, to_move: Color, en_passant_legal: str):
-
         if 'x' in notation and board.get_square(location=notation[-2:]).piece is None:
             # A piece made a capture on a square that has no piece!
             # This is an invalid notation, unless en passant happened here
@@ -94,6 +106,7 @@ class Move:
         This function simulates the new board state if the desired move is executed. If the new board state
         has a check in it, I throw an InvalidNotationError
         :param board: The board state of the current move
+        :param to_move: The color to move
         :return: None
         """
 
@@ -104,6 +117,69 @@ class Move:
         if board_copy.in_check(to_move):
             raise InvalidNotationError('This move puts you in check')
 
+    def castle(self, board: Board, to_move: Color, king_moved: bool, rook_moved: bool):
+        """
+        This function sets the origin and destination for a king-side castle move
+        Raises InvalidNotationError is the king is in check, castles through check, or ends up in check
+        :param board: The board state of the current move
+        :param to_move: The color to move
+        :param king_moved: True if the king has moved already
+        :param rook_moved: True of the rook on the h file has already moved
+        :return: None
+        """
 
+        """
+        (1) The right to castle has been lost:
+            - if the king has already moved, or
+            - with a rook that has already moved.
+        (2) Castling is prevented temporarily:
+            - if the square on which the king stands, or the square which it must cross, 
+                or the square which it is to occupy, is attacked by one or more of the opponent's pieces, or
+            - if there is any piece between the king and the rook with which castling is to be effected.
+        """
+        if king_moved or rook_moved:
+            # The right to castling is lost
+            raise InvalidNotationError('The king or rook have already moved')
 
+        rank = '1' if to_move is Color.WHITE else '8'
+        if board.get_square(f'e{rank}').piece != Piece(PieceType.KING, to_move) or \
+                board.get_square(f'h{rank}').piece != Piece(PieceType.ROOK, to_move):
+            # This statement verifies that there is indeed a king and a rook on the proper squares to execute a castle
+            raise InvalidNotationError('There are not pieces in the right location')
 
+        if board.in_check(to_move):
+            raise InvalidNotationError('Cannot castle out of check')
+
+        Move(board, 'Kf1', to_move)
+        # if the line above did not throw an exception, then the king would not castle through check
+        self.origin = board.get_square(location='e1')
+        self.destination = board.get_square(location='g1')
+
+    def long_castle(self, board: Board, to_move: Color, king_moved: bool, rook_moved: bool):
+        """
+        This function sets the origin and destination for a king-side castle move
+        Raises InvalidNotationError is the king is in check, castles through check, or ends up in check
+        :param board: The board state of the current move
+        :param to_move: The color to move
+        :param king_moved: True if the king has moved already
+        :param rook_moved: True of the rook on the a file has already moved
+        :return: None
+        """
+
+        if king_moved or rook_moved:
+            # The right to castling is lost
+            raise InvalidNotationError('The king or rook have already moved')
+
+        rank = '1' if to_move is Color.WHITE else '8'
+        if board.get_square(f'e{rank}').piece != Piece(PieceType.KING, to_move) or \
+                board.get_square(f'a{rank}').piece != Piece(PieceType.ROOK, to_move):
+            # This statement verifies that there is indeed a king and a rook on the proper squares to execute a castle
+            raise InvalidNotationError('There are not pieces in the right location')
+
+        if board.in_check(to_move):
+            raise InvalidNotationError('Cannot castle out of check')
+
+        Move(board, 'Kd1', to_move)
+        # if the line above did not throw an exception, then the king would not castle through check
+        self.origin = board.get_square(location='e1')
+        self.destination = board.get_square(location='c1')
