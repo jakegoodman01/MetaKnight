@@ -16,7 +16,7 @@ class Move:
         self.destination: Square = None  # the square at which the piece was moved to
         rank = '1' if to_move is Color.WHITE else '8'
         if notation == 'O-O':
-            self.castle(board, to_move, king_moved, h_rook_moved)
+            self.castle(board, to_move, king_moved, h_rook_moved, True)
             self.piece_moved: Piece = self.origin.piece
             self._not_in_check(board, to_move)
 
@@ -24,7 +24,7 @@ class Move:
             board.get_square(location=f'h{rank}').piece = None
             board.get_square(location=f'f{rank}').piece = Piece(PieceType.ROOK, to_move)
         elif notation == 'O-O-O':
-            self.long_castle(board, to_move, king_moved, a_rook_moved)
+            self.castle(board, to_move, king_moved, a_rook_moved, False)
             self.piece_moved: Piece = self.origin.piece
             self._not_in_check(board, to_move)
 
@@ -120,69 +120,37 @@ class Move:
         if board_copy.in_check(to_move):
             raise InvalidNotationError('This move puts you in check')
 
-    def castle(self, board: Board, to_move: Color, king_moved: bool, rook_moved: bool):
+    def castle(self, board: Board, to_move: Color, king_moved: bool, rook_moved: bool, king_side: bool):
         """
         This function sets the origin and destination for a king-side castle move
         Raises InvalidNotationError is the king is in check, castles through check, or ends up in check
         :param board: The board state of the current move
         :param to_move: The color to move
         :param king_moved: True if the king has moved already
-        :param rook_moved: True of the rook on the h file has already moved
+        :param rook_moved: True of the rook on involved in the castle has already moved
+        :param king_side: True if this is a king side castle, False if queen side castle
         :return: None
         """
-
-        """
-        (1) The right to castle has been lost:
-            - if the king has already moved, or
-            - with a rook that has already moved.
-        (2) Castling is prevented temporarily:
-            - if the square on which the king stands, or the square which it must cross, 
-                or the square which it is to occupy, is attacked by one or more of the opponent's pieces, or
-            - if there is any piece between the king and the rook with which castling is to be effected.
-        """
+        
         if king_moved or rook_moved:
             # The right to castling is lost
             raise InvalidNotationError('The king or rook have already moved')
 
         rank = '1' if to_move is Color.WHITE else '8'
+        file = 'h' if king_side else 'a'
         if board.get_square(f'e{rank}').piece != Piece(PieceType.KING, to_move) or \
-                board.get_square(f'h{rank}').piece != Piece(PieceType.ROOK, to_move):
+                board.get_square(f'{file}{rank}').piece != Piece(PieceType.ROOK, to_move):
             # This statement verifies that there is indeed a king and a rook on the proper squares to execute a castle
             raise InvalidNotationError('There are not pieces in the right location')
 
         if board.in_check(to_move):
             raise InvalidNotationError('Cannot castle out of check')
 
-        Move(board, f'Kf{rank}', to_move)
+        if king_side:
+            Move(board, f'Kf{rank}', to_move)
+            self.destination = board.get_square(location=f'g{rank}')
+        else:
+            Move(board, f'Kd{rank}', to_move)
+            self.destination = board.get_square(location=f'c{rank}')
         # if the line above did not throw an exception, then the king would not castle through check
         self.origin = board.get_square(location=f'e{rank}')
-        self.destination = board.get_square(location=f'g{rank}')
-
-    def long_castle(self, board: Board, to_move: Color, king_moved: bool, rook_moved: bool):
-        """
-        This function sets the origin and destination for a king-side castle move
-        Raises InvalidNotationError is the king is in check, castles through check, or ends up in check
-        :param board: The board state of the current move
-        :param to_move: The color to move
-        :param king_moved: True if the king has moved already
-        :param rook_moved: True of the rook on the a file has already moved
-        :return: None
-        """
-
-        if king_moved or rook_moved:
-            # The right to castling is lost
-            raise InvalidNotationError('The king or rook have already moved')
-
-        rank = '1' if to_move is Color.WHITE else '8'
-        if board.get_square(f'e{rank}').piece != Piece(PieceType.KING, to_move) or \
-                board.get_square(f'a{rank}').piece != Piece(PieceType.ROOK, to_move):
-            # This statement verifies that there is indeed a king and a rook on the proper squares to execute a castle
-            raise InvalidNotationError('There are not pieces in the right location')
-
-        if board.in_check(to_move):
-            raise InvalidNotationError('Cannot castle out of check')
-
-        Move(board, f'Kd{rank}', to_move)
-        # if the line above did not throw an exception, then the king would not castle through check
-        self.origin = board.get_square(location=f'e{rank}')
-        self.destination = board.get_square(location=f'c{rank}')
