@@ -5,7 +5,6 @@ from typing import List
 
 
 class Game:
-    # TODO: test me
     def __init__(self):
         self.board: Board = Board()
         self.game_history: List[Move] = []

@@ -124,7 +124,6 @@ class Board:
             return self._king_moves(square=square)
 
     def _pawn_moves(self, square: Square) -> List[List[Square]]:
-        # TODO: Account for en passant
         moves = []
         square = self.get_square(square=square)
         color = square.piece.color

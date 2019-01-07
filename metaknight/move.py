@@ -131,7 +131,7 @@ class Move:
         :param king_side: True if this is a king side castle, False if queen side castle
         :return: None
         """
-        
+
         if king_moved or rook_moved:
             # The right to castling is lost
             raise InvalidNotationError('The king or rook have already moved')
@@ -154,3 +154,4 @@ class Move:
             self.destination = board.get_square(location=f'c{rank}')
         # if the line above did not throw an exception, then the king would not castle through check
         self.origin = board.get_square(location=f'e{rank}')
+
