@@ -10,7 +10,7 @@ class InvalidNotationError(Exception):
 
 
 class Move:
-    def __init__(self, board: Board, to_move: Color, origin: Square, destination: Square):
+    def __init__(self, board: Board, to_move: Color, origin: Square, destination: Square, en_passant: bool=False):
         """
         :param board: The board that this move is being played on
         :param to_move: The player that made this move: Color.WHITE or Color.BLACK
@@ -23,7 +23,13 @@ class Move:
         self.origin: Square = board.get_square(square=origin)
         self.destination: Square = board.get_square(square=destination)
         self.piece_moved: Piece = self.origin.piece
-        self.piece_captured: Piece = self.destination.piece  # None if no piece was captured
+
+        if en_passant:
+            func = Square.up if self.to_move is Color.BLACK else Square.down
+            square = func(self.destination)
+            self.piece_captured: Piece = self.board.get_square(square=square).piece
+        else:
+            self.piece_captured: Piece = self.destination.piece  # None if no piece was captured
 
     def execute_move(self):
         self._not_in_check()

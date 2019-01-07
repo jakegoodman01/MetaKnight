@@ -17,6 +17,25 @@ class TestMove(TestCase):
         self.assertEqual(self.board.get_square(square=m1.origin).piece, None)
         self.assertEqual(self.board.get_square(square=m1.destination).piece, Piece(PieceType.PAWN, Color.WHITE))
 
+    def test_en_passant(self):
+        self.board.set_board_state([
+            '........',
+            '........',
+            '........',
+            '..Pp....',
+            '.....PpP',
+            '........',
+            '........',
+            '........'
+        ])
+        m1 = Move(self.board, Color.WHITE, Square('d5'), Square('c6'), en_passant=True)
+        m2 = Move(self.board, Color.BLACK, Square('f4'), Square('g3'), en_passant=True)
+        m3 = Move(self.board, Color.BLACK, Square('h4'), Square('g3'), en_passant=True)
+
+        self.assertEqual(m1.piece_captured, Piece(PieceType.PAWN, Color.BLACK))
+        self.assertEqual(m2.piece_captured, Piece(PieceType.PAWN, Color.WHITE))
+        self.assertEqual(m3.piece_captured, Piece(PieceType.PAWN, Color.WHITE))
+
     def test_not_in_check(self):
         self.board.set_board_state([
             '........',
