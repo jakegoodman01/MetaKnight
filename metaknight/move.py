@@ -26,11 +26,25 @@ class Move:
         self.piece_captured: Piece = self.destination.piece  # None if no piece was captured
 
     def execute_move(self):
+        self._not_in_check()
         self.board.get_square(square=self.origin).piece = None
         self.board.get_square(square=self.destination).piece = self.piece_moved
 
         self.origin: Square = self.board.get_square(square=self.origin)
         self.destination: Square = self.board.get_square(square=self.destination)
+
+    def _not_in_check(self):
+        """
+        This function simulates the new board state if the desired move is executed. If the new board state
+        has a check in it, I throw an InvalidNotationError
+        """
+
+        board_copy = deepcopy(self.board)
+        board_copy.get_square(square=self.origin).piece = None
+        board_copy.get_square(square=self.destination).piece = self.piece_moved
+
+        if board_copy.in_check(self.to_move):
+            raise InvalidNotationError('This move puts you in check')
 
 """
 class Move:

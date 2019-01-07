@@ -17,6 +17,27 @@ class TestMove(TestCase):
         self.assertEqual(self.board.get_square(square=m1.origin).piece, None)
         self.assertEqual(self.board.get_square(square=m1.destination).piece, Piece(PieceType.PAWN, Color.WHITE))
 
+    def test_not_in_check(self):
+        self.board.set_board_state([
+            '........',
+            '.....B..',
+            '.K.k....',
+            'r.......',
+            '........',
+            '........',
+            '........',
+            '........'
+        ])
+        m1 = Move(self.board, Color.BLACK, Square('b6'), Square('c6'))
+        m2 = Move(self.board, Color.WHITE, Square('d6'), Square('c6'))
+        m3 = Move(self.board, Color.WHITE, Square('d6'), Square('e6'))
+        m4 = Move(self.board, Color.BLACK, Square('b6'), Square('b5'))
+
+        self.assertRaises(InvalidNotationError, lambda: m1.execute_move())
+        self.assertRaises(InvalidNotationError, lambda: m2.execute_move())
+        self.assertRaises(InvalidNotationError, lambda: m3.execute_move())
+        self.assertRaises(InvalidNotationError, lambda: m4.execute_move())
+
 """
 class TestMove(TestCase):
     def setUp(self):
