@@ -10,6 +10,30 @@ class InvalidNotationError(Exception):
 
 
 class Move:
+    def __init__(self, board: Board, to_move: Color, origin: Square, destination: Square):
+        """
+        :param board: The board that this move is being played on
+        :param to_move: The player that made this move: Color.WHITE or Color.BLACK
+        :param origin: The square that the piece started on
+        :param destination: The square that the piece moves to
+        """
+
+        self.board: Board = board
+        self.to_move: Color = to_move
+        self.origin: Square = board.get_square(square=origin)
+        self.destination: Square = board.get_square(square=destination)
+        self.piece_moved: Piece = self.origin.piece
+        self.piece_captured: Piece = self.destination.piece  # None if no piece was captured
+
+    def execute_move(self):
+        self.board.get_square(square=self.origin).piece = None
+        self.board.get_square(square=self.destination).piece = self.piece_moved
+
+        self.origin: Square = self.board.get_square(square=self.origin)
+        self.destination: Square = self.board.get_square(square=self.destination)
+
+"""
+class Move:
     def __init__(self, board: Board, notation: str, to_move: Color, en_passant_file: str=None,
                  king_moved: bool=False, h_rook_moved: bool=False, a_rook_moved: bool=False):
         self.origin: Square = None  # the square at which the piece began
@@ -105,13 +129,13 @@ class Move:
             raise InvalidNotationError()
 
     def _not_in_check(self, board: Board, to_move: Color):
-        """
+        \"""
         This function simulates the new board state if the desired move is executed. If the new board state
         has a check in it, I throw an InvalidNotationError
         :param board: The board state of the current move
         :param to_move: The color to move
         :return: None
-        """
+        \"""
 
         board_copy = deepcopy(board)
         board_copy.get_square(square=self.origin).piece = None
@@ -121,7 +145,7 @@ class Move:
             raise InvalidNotationError('This move puts you in check')
 
     def castle(self, board: Board, to_move: Color, king_moved: bool, rook_moved: bool, king_side: bool):
-        """
+        \"""
         This function sets the origin and destination for a king-side castle move
         Raises InvalidNotationError is the king is in check, castles through check, or ends up in check
         :param board: The board state of the current move
@@ -130,7 +154,7 @@ class Move:
         :param rook_moved: True of the rook on involved in the castle has already moved
         :param king_side: True if this is a king side castle, False if queen side castle
         :return: None
-        """
+        \"""
 
         if king_moved or rook_moved:
             # The right to castling is lost
@@ -154,4 +178,4 @@ class Move:
             self.destination = board.get_square(location=f'c{rank}')
         # if the line above did not throw an exception, then the king would not castle through check
         self.origin = board.get_square(location=f'e{rank}')
-
+"""

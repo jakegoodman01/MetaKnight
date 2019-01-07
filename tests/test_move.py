@@ -2,9 +2,22 @@ from unittest import TestCase
 from metaknight.board import Board
 from metaknight.square import Square
 from metaknight.move import Move, InvalidNotationError
-from metaknight.piece import Color
+from metaknight.piece import Piece, PieceType, Color
 
 
+class TestMove(TestCase):
+    def setUp(self):
+        self.board = Board()
+
+    def test_execute_move(self):
+        m1 = Move(self.board, Color.WHITE, Square('e2'), Square('e4'))
+        m1.execute_move()
+        self.assertEqual(m1.origin.piece, None)
+        self.assertEqual(m1.destination.piece, Piece(PieceType.PAWN, Color.WHITE))
+        self.assertEqual(self.board.get_square(square=m1.origin).piece, None)
+        self.assertEqual(self.board.get_square(square=m1.destination).piece, Piece(PieceType.PAWN, Color.WHITE))
+
+"""
 class TestMove(TestCase):
     def setUp(self):
         self.board = Board()
@@ -110,3 +123,4 @@ class TestMove(TestCase):
         self.assertEqual(self.king_move_1.destination, Square('g2'))
         self.assertEqual(self.king_move_2.destination, Square('h7'))
         self.assertEqual(self.king_move_3.destination, Square('f1'))
+"""
