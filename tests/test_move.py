@@ -1,7 +1,7 @@
 from unittest import TestCase
 from metaknight.board import Board
 from metaknight.square import Square
-from metaknight.move import Move, InvalidNotationError
+from metaknight.move import Move, InvalidNotationError, Castle, CannotCastleError
 from metaknight.piece import Piece, PieceType, Color
 
 
@@ -56,6 +56,33 @@ class TestMove(TestCase):
         self.assertRaises(InvalidNotationError, lambda: m2.execute_move())
         self.assertRaises(InvalidNotationError, lambda: m3.execute_move())
         self.assertRaises(InvalidNotationError, lambda: m4.execute_move())
+
+    def test_castle(self):
+        self.board.set_board_state([
+            'R...K.NR',
+            '........',
+            '........',
+            '........',
+            '........',
+            '...R....',
+            '........',
+            'r...k..r'
+        ])
+        c1 = Castle(self.board, Color.WHITE, king_side=False)  # castle through check
+        c2 = Castle(self.board, Color.WHITE, king_side=True)  # normal castle
+        c3 = Castle(self.board, Color.BLACK, king_side=True)  # piece in the way
+        c4 = Castle(self.board, Color.BLACK, king_side=False)  # normal castle
+
+        self.assertRaises(InvalidNotationError, lambda: c1.execute_move())
+        c2.execute_move()
+        self.assertEqual(self.board.get_square(location='g1').piece, Piece(PieceType.KING, Color.WHITE))
+        self.assertEqual(self.board.get_square(location='f1').piece, Piece(PieceType.ROOK, Color.WHITE))
+
+        self.assertRaises(InvalidNotationError, lambda: c3.execute_move())
+        c4.execute_move()
+        self.assertEqual(self.board.get_square(location='c8').piece, Piece(PieceType.KING, Color.BLACK))
+        self.assertEqual(self.board.get_square(location='d8').piece, Piece(PieceType.ROOK, Color.BLACK))
+
 
 """
 class TestMove(TestCase):

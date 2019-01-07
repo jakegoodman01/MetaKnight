@@ -9,6 +9,10 @@ class InvalidNotationError(Exception):
     pass
 
 
+class CannotCastleError(Exception):
+    pass
+
+
 class Move:
     def __init__(self, board: Board, to_move: Color, origin: Square, destination: Square, en_passant: bool=False):
         """
@@ -199,3 +203,25 @@ class Move:
         # if the line above did not throw an exception, then the king would not castle through check
         self.origin = board.get_square(location=f'e{rank}')
 """
+
+
+class Castle:
+    def __init__(self, board: Board, to_move: Color, king_side: bool=True):
+        if board.in_check(to_move):
+            raise CannotCastleError
+        rank = '1' if to_move is Color.WHITE else '8'
+        direction = Square.right if king_side else Square.left
+        rook_file = 'h' if king_side else 'a'
+        rook_dest = 'f' if king_side else 'd'
+
+        origin = Square(f'e{rank}')
+
+        self.king_move1 = Move(board, to_move, origin, direction(origin))
+        self.king_move2 = Move(board, to_move, origin, direction(direction(origin)))
+        self.rook_move = Move(board, to_move, Square(f'{rook_file}{rank}'), Square(f'{rook_dest}{rank}'))
+
+    def execute_move(self):
+        self.king_move1.execute_move()
+        self.king_move2.execute_move()
+        self.rook_move.execute_move()
+
