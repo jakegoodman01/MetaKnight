@@ -1,6 +1,6 @@
 from metaknight.board import Board
 from metaknight.square import Square
-from metaknight.move import Move, InvalidNotationError
+from metaknight.move import Move, InvalidNotationError, Castle
 from metaknight.piece import Piece, Color, PieceType
 from typing import List
 
@@ -30,7 +30,6 @@ class Game:
             elif move.origin.file == 'h':
                 self.h_rook_moved[self.to_move.value] = True
 
-        self.board.get_square(square=move.origin).piece = None
         if self.board.get_square(square=move.destination).piece:
             # If there was a capture
             captured = self.board.get_square(square=move.destination).piece.piece_type
@@ -38,8 +37,8 @@ class Game:
                 self.black_captured.append(captured)
             else:
                 self.white_captured.append(captured)
-        self.board.get_square(square=move.destination).piece = move.piece_moved
 
+        move.execute_move()
         self.to_move = self.to_move.switch()
         self.game_history.append(move)
 
@@ -57,14 +56,17 @@ class Game:
             if piece_moved is PieceType.PAWN and origin_rank + increment == destination_rank:
                 return last_move.origin.file
 
-    def notation_parser(self, notation: str) -> Move:
+    def notation_parser(self, notation: str) -> Move or Castle:
+        if notation == 'O-O':
+            return Castle(self.board, self.to_move, king_side=True)
+        elif notation == 'O-O-O':
+            return Castle(self.board, self.to_move, king_side=False)
+
         destination, en_passant = self._find_destination(notation)
         origin = self._find_origin(notation, destination)
         return Move(self.board, self.to_move, origin, destination, en_passant)
 
     def _find_destination(self, notation: str) -> (Square, bool):
-        destination: Square = None
-        en_passant = False
         if 'x' in notation and self.board.get_square(location=notation[-2:]).piece is None:
             # A piece made a capture on a square that has no piece!
             # This is an invalid notation, unless en passant happened here
@@ -80,13 +82,10 @@ class Game:
                         # The board conditions for en passant were met
                         en_passant_file = self.en_passant_file()
                         if en_passant_file and en_passant_file == square.file:
-                            destination = self.board.get_square(location=notation[-2:])
-                            en_passant = True
+                            return self.board.get_square(location=notation[-2:]), True
             raise InvalidNotationError()
-        else:
-            destination = self.board.get_square(location=notation[-2:])
 
-        return destination, en_passant
+        return self.board.get_square(location=notation[-2:]), False
 
     def _find_origin(self, notation: str, destination) -> Square:
         increment = -1 if self.to_move is Color.WHITE else 1
