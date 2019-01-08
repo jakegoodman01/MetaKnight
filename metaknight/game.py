@@ -1,6 +1,7 @@
 from metaknight.board import Board
-from metaknight.move import Move
-from metaknight.piece import Color, PieceType
+from metaknight.square import Square
+from metaknight.move import Move, InvalidNotationError
+from metaknight.piece import Piece, Color, PieceType
 from typing import List
 
 
@@ -19,10 +20,7 @@ class Game:
         self.black_captured: List[PieceType] = []  # All captured black pieces
 
     def play_move(self, notation):
-        move = Move(self.board, notation, self.to_move, en_passant_file=self.en_passant_file(),
-                    king_moved=self.king_moved[self.to_move.value],
-                    h_rook_moved=self.h_rook_moved[self.to_move.value],
-                    a_rook_moved=self.a_rook_moved[self.to_move.value])
+        move = self.notation_parser(notation)
 
         if move.piece_moved.piece_type == PieceType.KING:
             self.king_moved[self.to_move.value] = True
@@ -59,5 +57,72 @@ class Game:
             if piece_moved is PieceType.PAWN and origin_rank + increment == destination_rank:
                 return last_move.origin.file
 
+    def notation_parser(self, notation: str) -> Move:
+        destination, en_passant = self._find_destination(notation)
+        origin = self._find_origin(notation, destination)
+        return Move(self.board, self.to_move, origin, destination, en_passant)
 
+    def _find_destination(self, notation: str) -> (Square, bool):
+        destination: Square = None
+        en_passant = False
+        if 'x' in notation and self.board.get_square(location=notation[-2:]).piece is None:
+            # A piece made a capture on a square that has no piece!
+            # This is an invalid notation, unless en passant happened here
+            if len(notation) == 4 and 97 <= ord(notation[0]) <= 104:
+                # A pawn made the capture
+                if notation[3] == '6' and self.to_move == Color.WHITE or \
+                        notation[3] == '3' and self.to_move == Color.BLACK:
+                    # The capture was made on the correct rank for en passant
+                    file = notation[2]
+                    rank = int(notation[3]) + 1 if self.to_move == Color.BLACK else int(notation[3]) - 1
+                    square = self.board.get_square(location=f'{file}{rank}')  # a pawn of opposite color should be here
+                    if square.piece and square.piece.color != self.to_move:
+                        # The board conditions for en passant were met
+                        en_passant_file = self.en_passant_file()
+                        if en_passant_file and en_passant_file == square.file:
+                            destination = self.board.get_square(location=notation[-2:])
+                            en_passant = True
+            raise InvalidNotationError()
+        else:
+            destination = self.board.get_square(location=notation[-2:])
 
+        return destination, en_passant
+
+    def _find_origin(self, notation: str, destination) -> Square:
+        increment = -1 if self.to_move is Color.WHITE else 1
+        if len(notation) == 2:
+            # A pawn simply advanced
+            file = notation[0]
+            rank = int(notation[1])
+            if (self.to_move is Color.WHITE and rank == 4) or (self.to_move is Color.BLACK and rank == 5):
+                # The pawn could have come from the start row, special case
+                if self.board.get_square(location=f'{file}{rank + increment}').piece is None:
+                    # if the square that the pawn came from has no piece there
+                    return self.board.get_square(location=f'{file}{rank + 2 * increment}')
+            return self.board.get_square(location=f'{file}{rank + increment}')
+        elif len(notation) == 4 and 97 <= ord(notation[0]) <= 104:
+            # A pawn captured another piece
+            file = notation[0]
+            rank = int(notation[3])
+            return self.board.get_square(location=f'{file}{rank + increment}')
+        elif len(notation) == 4 or len(notation) == 3:
+            # A piece was moved, or there was a capture
+            piece_moved = PieceType.KNIGHT
+            if notation[0] == 'B':
+                piece_moved = PieceType.BISHOP
+            elif notation[0] == 'R':
+                piece_moved = PieceType.ROOK
+            elif notation[0] == 'Q':
+                piece_moved = PieceType.QUEEN
+            elif notation[0] == 'K':
+                piece_moved = PieceType.KING
+
+            for rank in self.board.squares:
+                for square in rank:
+                    if square.piece == Piece(piece_moved, self.to_move):
+                        moves = self.board.get_moves(square=square)
+                        for direction in moves:
+                            for move in direction:
+                                if move == destination:
+                                    return square
+        raise InvalidNotationError()
