@@ -21,6 +21,7 @@ class Game:
 
     def play_move(self, notation):
         move = self.notation_parser(notation)
+        move.execute_move()
 
         if move.piece_moved.piece_type == PieceType.KING:
             self.king_moved[self.to_move.value] = True
@@ -30,15 +31,12 @@ class Game:
             elif move.origin.file == 'h':
                 self.h_rook_moved[self.to_move.value] = True
 
-        if self.board.get_square(square=move.destination).piece:
-            # If there was a capture
-            captured = self.board.get_square(square=move.destination).piece.piece_type
-            if self.to_move is Color.WHITE:
-                self.black_captured.append(captured)
-            else:
-                self.white_captured.append(captured)
+        captured = move.piece_captured
+        if self.to_move is Color.WHITE and captured:
+            self.black_captured.append(captured.piece_type)
+        elif captured:
+            self.white_captured.append(captured.piece_type)
 
-        move.execute_move()
         self.to_move = self.to_move.switch()
         self.game_history.append(move)
 
@@ -58,9 +56,13 @@ class Game:
 
     def notation_parser(self, notation: str) -> Move or Castle:
         if notation == 'O-O':
-            return Castle(self.board, self.to_move, king_side=True)
+            rook = self.h_rook_moved[self.to_move.value]
+            king = self.king_moved[self.to_move.value]
+            return Castle(self.board, self.to_move, king_side=True, king_moved=king, rook_moved=rook)
         elif notation == 'O-O-O':
-            return Castle(self.board, self.to_move, king_side=False)
+            rook = self.a_rook_moved[self.to_move.value]
+            king = self.king_moved[self.to_move.value]
+            return Castle(self.board, self.to_move, king_side=False, king_moved=king, rook_moved=rook)
 
         destination, en_passant = self._find_destination(notation)
         origin = self._find_origin(notation, destination)
