@@ -33,9 +33,9 @@ class Move:
             if self.destination.piece and self.destination.piece.color == to_move:
                 raise InvalidNotationError
             self.piece_captured: Piece = self.destination.piece  # None if no piece was captured
+        self._not_in_check()
 
     def execute_move(self):
-        self._not_in_check()
         self.board.get_square(square=self.origin).piece = None
         self.board.get_square(square=self.destination).piece = self.piece_moved
         if self.en_passant:

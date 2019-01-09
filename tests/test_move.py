@@ -47,15 +47,11 @@ class TestMove(TestCase):
             '........',
             '........'
         ])
-        m1 = Move(self.board, Color.BLACK, Square('b6'), Square('c6'))
-        m2 = Move(self.board, Color.WHITE, Square('d6'), Square('c6'))
-        m3 = Move(self.board, Color.WHITE, Square('d6'), Square('e6'))
-        m4 = Move(self.board, Color.BLACK, Square('b6'), Square('b5'))
 
-        self.assertRaises(InvalidNotationError, lambda: m1.execute_move())
-        self.assertRaises(InvalidNotationError, lambda: m2.execute_move())
-        self.assertRaises(InvalidNotationError, lambda: m3.execute_move())
-        self.assertRaises(InvalidNotationError, lambda: m4.execute_move())
+        self.assertRaises(InvalidNotationError, lambda: Move(self.board, Color.BLACK, Square('b6'), Square('c6')))
+        self.assertRaises(InvalidNotationError, lambda: Move(self.board, Color.WHITE, Square('d6'), Square('c6')))
+        self.assertRaises(InvalidNotationError, lambda: Move(self.board, Color.WHITE, Square('d6'), Square('e6')))
+        self.assertRaises(InvalidNotationError, lambda: Move(self.board, Color.BLACK, Square('b6'), Square('b5')))
 
     def test_castle(self):
         self.board.set_board_state([
@@ -68,11 +64,10 @@ class TestMove(TestCase):
             '........',
             'r...k..r'
         ])
-        c1 = Castle(self.board, Color.WHITE, king_side=False)  # castle through check
         c2 = Castle(self.board, Color.WHITE, king_side=True)  # normal castle
         c3 = Castle(self.board, Color.BLACK, king_side=False)  # normal castle
 
-        self.assertRaises(InvalidNotationError, lambda: c1.execute_move())
+        self.assertRaises(InvalidNotationError, lambda: Castle(self.board, Color.WHITE, king_side=False))
         c2.execute_move()
         self.assertEqual(self.board.get_square(location='g1').piece, Piece(PieceType.KING, Color.WHITE))
         self.assertEqual(self.board.get_square(location='f1').piece, Piece(PieceType.ROOK, Color.WHITE))
