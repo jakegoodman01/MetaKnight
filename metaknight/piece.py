@@ -9,6 +9,11 @@ class PieceType(Enum):
     QUEEN = 4
     KING = 5
 
+    def __repr__(self):
+        if self.value == 1:
+            return 'N'
+        return self.name[0]
+
 
 class Color(Enum):
     WHITE = 0
