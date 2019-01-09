@@ -118,12 +118,34 @@ class Game:
             elif notation[0] == 'K':
                 piece_moved = PieceType.KING
 
-            for rank in self.board.squares:
-                for square in rank:
-                    if square.piece == Piece(piece_moved, self.to_move):
-                        moves = self.board.get_moves(square=square)
-                        for direction in moves:
-                            for move in direction:
-                                if move == destination:
-                                    return square
+            if len(notation) == 4 and notation[1] != 'x':
+                if notation[2].isdigit():
+                    rank = int(notation) - 1
+                    for square in self.board.squares[rank]:
+                        if square.piece == Piece(piece_moved, self.to_move):
+                            moves = self.board.get_moves(square=square)
+                            for direction in moves:
+                                for move in direction:
+                                    if move == destination:
+                                        return square
+                else:
+                    for rank in self.board.squares:
+                        file = Square.files.index(notation[1])
+                        square = rank[file]
+                        if square.piece == Piece(piece_moved, self.to_move):
+                            moves = self.board.get_moves(square=square)
+                            for direction in moves:
+                                for move in direction:
+                                    if move == destination:
+                                        return square
+
+            else:
+                for rank in self.board.squares:
+                    for square in rank:
+                        if square.piece == Piece(piece_moved, self.to_move):
+                            moves = self.board.get_moves(square=square)
+                            for direction in moves:
+                                for move in direction:
+                                    if move == destination:
+                                        return square
         raise InvalidNotationError()
