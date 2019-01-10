@@ -19,8 +19,12 @@ class Game:
         self.white_captured: List[PieceType] = []  # All captured white pieces
         self.black_captured: List[PieceType] = []  # All captured black pieces
 
-    def play_move(self, notation):
-        move = self.notation_parser(notation)
+    def play_move(self, notation: str=None, m: Move=None):
+        move = None
+        if notation:
+            move = self.notation_parser(notation)
+        else:
+            move = m
         move.execute_move()
 
         if move.piece_moved.piece_type == PieceType.KING:
@@ -149,3 +153,45 @@ class Game:
                                     if move == destination:
                                         return square
         raise InvalidNotationError()
+
+    def generate_moves(self, to_move: Color=None) -> List[Move]:
+        """
+        :return: List of all legal moves from the current board state
+        """
+        if not to_move:
+            to_move = self.to_move
+        moves: List[Move] = []
+        for row in self.board.squares:
+            for square in row:
+                if square.piece and square.piece.color is to_move:
+                    for i in self.board.get_moves(square=square):
+                        for j in i:
+                            try:
+                                moves.append(Move(self.board, square.piece.color, square, j))
+                            except InvalidNotationError:
+                                pass
+        file = self.en_passant_file()
+        if file:
+            rank = '5' if to_move is Color.WHITE else '4'
+            capture = '6' if to_move is Color.WHITE else '3'
+            if file != 'a':
+                f = Square.files.index(file) - 1
+                origin = self.board.get_square(location=f'{Square.files[f]}{rank}')
+                destination = self.board.get_square(location=f'{file}{capture}')
+                try:
+                    m = Move(self.board, to_move, origin, destination, en_passant=True)
+                    moves.append(m)
+                except InvalidNotationError:
+                    pass
+
+            if file != 'h':
+                f = Square.files.index(file) + 1
+                origin = self.board.get_square(location=f'{Square.files[f]}{rank}')
+                destination = self.board.get_square(location=f'{file}{capture}')
+                try:
+                    m = Move(self.board, to_move, origin, destination, en_passant=True)
+                    moves.append(m)
+                except InvalidNotationError:
+                    pass
+        return moves
+
