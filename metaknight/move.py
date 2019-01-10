@@ -57,6 +57,22 @@ class Move:
         self.origin: Square = self.board.get_square(square=self.origin)
         self.destination: Square = self.board.get_square(square=self.destination)
 
+    def undo(self):
+        """
+        Precondition: The last move executed in the board was this move
+        This function undoes this move
+        """
+        self.board.get_square(square=self.origin).piece = self.piece_moved
+        self.board.get_square(square=self.destination).piece = self.piece_captured
+        if self.en_passant:
+            func = Square.up if self.to_move is Color.BLACK else Square.down
+            square = func(self.destination)
+            self.board.get_square(square=square).piece = self.piece_captured
+            self.board.get_square(square=self.destination).piece = None
+
+        self.origin: Square = self.board.get_square(square=self.origin)
+        self.destination: Square = self.board.get_square(square=self.destination)
+
     def _not_in_check(self):
         """
         This function simulates the new board state if the desired move is executed. If the new board state

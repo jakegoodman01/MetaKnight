@@ -44,6 +44,11 @@ class Game:
         self.to_move = self.to_move.switch()
         self.game_history.append(move)
 
+    def undo_move(self):
+        self.game_history[-1].undo()
+        del self.game_history[-1]
+        self.to_move = self.to_move.switch()
+
     def en_passant_file(self) -> str:
         """
         :return: The file of a pawn that advanced forward two squares, legalizing en passant. None if no pawn did this
