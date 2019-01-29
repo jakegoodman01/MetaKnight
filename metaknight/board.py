@@ -9,15 +9,33 @@ class Board:
         self.set_up()
 
     def __repr__(self):
+        return self.board_as_str(Color.WHITE)
+
+    def board_as_str(self, perspective: Color):
+        """
+        Prints the current state of the board
+        :param perspective: prints from either white's perspective or black's perspective
+        :return: string representation of the current board state
+        """
         output = ''
-        for rank in range(7, -1, -1):
-            for file in range(0, 8):
-                piece = self.squares[rank][file].piece
-                if piece:
-                    output += f'{repr(piece)} '
-                else:
-                    output += '. '
-            output += '\n'
+        if perspective is Color.WHITE:
+            for rank in range(7, -1, -1):
+                for file in range(0, 8):
+                    piece = self.squares[rank][file].piece
+                    if piece:
+                        output += f'{repr(piece)} '
+                    else:
+                        output += '. '
+                output += '\n'
+        if perspective is Color.BLACK:
+            for rank in range(0, 8):
+                for file in range(7, -1, -1):
+                    piece = self.squares[rank][file].piece
+                    if piece:
+                        output += f'{repr(piece)} '
+                    else:
+                        output += '. '
+                output += '\n'
         return output[:-1]  # This removes the last \n character
 
     def clear(self):
