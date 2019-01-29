@@ -31,7 +31,7 @@ class Piece:
         self.color = color
 
     def __repr__(self):
-        if self.color is Color.WHITE:
+        if self.color is Color.BLACK:
             if self.piece_type is PieceType.PAWN:
                 return '\u2659'
             if self.piece_type is PieceType.KNIGHT:
@@ -44,7 +44,7 @@ class Piece:
                 return '\u2655'
             if self.piece_type is PieceType.KING:
                 return '\u2654'
-        elif self.color is Color.BLACK:
+        elif self.color is Color.WHITE:
             if self.piece_type is PieceType.PAWN:
                 return '\u265f'
             if self.piece_type is PieceType.KNIGHT:
