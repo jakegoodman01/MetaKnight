@@ -264,6 +264,7 @@ class Board:
             for square in row:
                 if square.piece == Piece(PieceType.KING, color):
                     king_location = square
+                    break
 
         for row in self.squares:
             for square in row:
