@@ -159,13 +159,13 @@ class Game:
                                         return square
         raise InvalidNotationError()
 
-    def generate_moves(self, to_move: Color=None) -> List[Move]:
+    def generate_moves(self, to_move: Color=None) -> List[Move or Castle]:
         """
         :return: List of all legal moves from the current board state
         """
         if not to_move:
             to_move = self.to_move
-        moves: List[Move] = []
+        moves: List[Move or Castle] = []
         for row in self.board.squares:
             for square in row:
                 if square.piece and square.piece.color is to_move:
@@ -175,6 +175,16 @@ class Game:
                                 moves.append(Move(self.board, square.piece.color, square, j))
                             except InvalidNotationError:
                                 pass
+        try:
+            moves.append(self.notation_parser("O-O"))
+        except InvalidNotationError:
+            pass
+
+        try:
+            moves.append(self.notation_parser("O-O-O"))
+        except InvalidNotationError:
+            pass
+
         file = self.en_passant_file()
         if file:
             rank = '5' if to_move is Color.WHITE else '4'
