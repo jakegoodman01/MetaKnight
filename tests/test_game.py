@@ -24,6 +24,17 @@ class TestGame(TestCase):
         self.game.play_move('Qh5')
         self.game.play_move('Ke7')
 
+        self.assertEqual(self.game.board.get_square('f3').piece, None)
+        self.assertEqual(self.game.board.get_square('e7').piece, Piece(PieceType.KING, Color.BLACK))
+        self.assertEqual(self.game_copy.board.get_square('f3').piece, Piece(PieceType.QUEEN, Color.WHITE))
+        self.assertEqual(self.game_copy.board.get_square('e7').piece, Piece(PieceType.KNIGHT, Color.BLACK))
+
+    def test_possible_games(self):
+        self.assertEqual(20, len(self.game.possible_games(1)))
+        self.assertEqual(400, len(self.game.possible_games(2)))
+        self.assertEqual(8902, len(self.game.possible_games(3)))
+        # self.assertEqual(20, len(self.game.possible_games(1)))
+
     def test_play_move(self):
         self.game.play_move('e4')
         self.assertEqual(self.game.board.get_square(location='e2').piece, None)
