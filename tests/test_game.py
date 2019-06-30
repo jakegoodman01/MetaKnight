@@ -8,6 +8,22 @@ class TestGame(TestCase):
     def setUp(self):
         self.game = Game()
 
+    def test_copy(self):
+        self.game.play_move('e4')
+        self.game.play_move('e5')
+        self.game.play_move('Bc4')
+        self.game.play_move('f6')
+
+        self.game_copy = self.game.copy()
+        self.game_copy.play_move('Qf3')
+        self.game_copy.play_move('Ne7')
+        self.game_copy.play_move('Bf7')
+
+        self.game.play_move('a3')
+        self.game.play_move('Nc6')
+        self.game.play_move('Qh5')
+        self.game.play_move('Ke7')
+
     def test_play_move(self):
         self.game.play_move('e4')
         self.assertEqual(self.game.board.get_square(location='e2').piece, None)
