@@ -4,6 +4,8 @@ from metaknight.move import Move, InvalidNotationError, Castle
 from metaknight.piece import Piece, Color, PieceType
 from typing import List
 
+from copy import deepcopy
+
 
 class Game:
     def __init__(self):
@@ -210,3 +212,9 @@ class Game:
                     pass
         return moves
 
+    def copy(self):
+        """
+        This function returns a copy of this current game
+        """
+
+        return deepcopy(self)
