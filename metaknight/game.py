@@ -218,3 +218,20 @@ class Game:
         """
 
         return deepcopy(self)
+
+    def possible_games(self, n: int) -> List[List[Move or Castle]]:
+        """
+        :param n: number of moves
+        :return: List of lists of possible moves for the next n moves
+        """
+        games: List[List[Move or Castle]] = []
+        if n == 0:
+            return [[]]
+        for move in self.generate_moves():
+            new_game = self.copy()
+            move.board = new_game.board
+            new_game.play_move(m=move)
+            for g in new_game.possible_games(n-1):
+                li = [move] + g
+                games.append(li)
+        return games
