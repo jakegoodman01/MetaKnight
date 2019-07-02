@@ -144,3 +144,8 @@ class BoardTests(TestCase):
         self.set_test_position_2()
         self.assertEqual(self.board.in_check(Color.BLACK), True)
         self.assertEqual(self.board.in_check(Color.WHITE), False)
+
+    def test_evaluate_by_material(self):
+        self.assertEqual(self.board.evaluate_by_material(), 0)
+        self.set_test_position_2()
+        self.assertEqual(self.board.evaluate_by_material(), 2)
