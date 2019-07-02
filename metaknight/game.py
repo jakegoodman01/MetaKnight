@@ -75,9 +75,21 @@ class Game:
             king = self.king_moved[self.to_move.value]
             return Castle(self.board, self.to_move, king_side=False, king_moved=king, rook_moved=rook)
 
+        promotion: PieceType = PieceType.QUEEN
+        if not notation[-1].isdigit():
+            if notation[-1] == 'Q':
+                promotion = PieceType.QUEEN
+            elif notation[-1] == 'N':
+                promotion = PieceType.KNIGHT
+            elif notation[-1] == 'B':
+                promotion = PieceType.BISHOP
+            elif notation[-1] == 'R':
+                promotion = PieceType.ROOK
+            notation = notation[:-1]
+
         destination, en_passant = self._find_destination(notation)
         origin = self._find_origin(notation, destination)
-        return Move(self.board, self.to_move, origin, destination, en_passant)
+        return Move(self.board, self.to_move, origin, destination, en_passant, promotion=promotion)
 
     def _find_destination(self, notation: str) -> (Square, bool):
         if 'x' in notation and self.board.get_square(location=notation[-2:]).piece is None:
@@ -235,3 +247,13 @@ class Game:
                 li = [move] + g
                 games.append(li)
         return games
+
+    def is_stalemate(self):
+        return len(self.generate_moves()) == 0 and self.board.in_check(self.to_move) is False
+
+    def is_checkmate(self):
+        return len(self.generate_moves()) == 0 and self.board.in_check(self.to_move) is True
+
+    def is_draw_by_insufficient_material(self):
+        return len(self.white_captured) == 15 and len(self.black_captured) == 15
+
