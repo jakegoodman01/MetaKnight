@@ -10,12 +10,15 @@ class InvalidNotationError(Exception):
 
 
 class Move:
-    def __init__(self, board: Board, to_move: Color, origin: Square, destination: Square, en_passant: bool=False):
+    def __init__(self, board: Board, to_move: Color, origin: Square, destination: Square,
+                 en_passant: bool=False, promotion: PieceType=PieceType.QUEEN):
         """
         :param board: The board that this move is being played on
         :param to_move: The player that made this move: Color.WHITE or Color.BLACK
         :param origin: The square that the piece started on
         :param destination: The square that the piece moves to
+        :param en_passant: True if this move makes use of the en_passant rule
+        :param promotion: the piece that a pawn gets promoted to it it makes its way to the other side
         """
 
         self.board: Board = board
@@ -24,7 +27,14 @@ class Move:
         self.destination: Square = board.get_square(square=destination)
         self.piece_moved: Piece = self.origin.piece
         self.en_passant = en_passant
+        self.promotion: PieceType = promotion
 
+        # promote is True if a pawn moved to the other side of the board
+        self.promote = False
+        if self.piece_moved and self.piece_moved.piece_type == PieceType.PAWN and \
+                (self.to_move == Color.WHITE and self.destination.rank == '8' or
+                 self.to_move == Color.BLACK and self.destination.rank == '1'):
+            self.promote = True
         if not self.origin.piece or self.origin.piece.color != self.to_move:
             raise InvalidNotationError
 
@@ -48,11 +58,15 @@ class Move:
 
     def execute_move(self):
         self.board.get_square(square=self.origin).piece = None
-        self.board.get_square(square=self.destination).piece = self.piece_moved
-        if self.en_passant:
-            func = Square.up if self.to_move is Color.BLACK else Square.down
-            square = func(self.destination)
-            self.board.get_square(square=square).piece = None
+
+        if self.promote:
+            self.board.get_square(square=self.destination).piece = Piece(self.promotion, self.to_move)
+        else:
+            self.board.get_square(square=self.destination).piece = self.piece_moved
+            if self.en_passant:
+                func = Square.up if self.to_move is Color.BLACK else Square.down
+                square = func(self.destination)
+                self.board.get_square(square=square).piece = None
 
         self.origin: Square = self.board.get_square(square=self.origin)
         self.destination: Square = self.board.get_square(square=self.destination)
