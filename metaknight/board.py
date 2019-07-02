@@ -277,5 +277,34 @@ class Board:
                                 return True
         return False
 
+    def evaluate(self) -> float:
+        """
+        returns index representing what player is doing better. Negative number for black and positive for white
+        1 point indicates a pawn, so if evaluate() returns -2, black is 2 pawns ahead
+        certain tactics will be used in this function, for example pins and doubled pawns
+        """
+        # TODO: finish
+        return self.evaluate_by_material()
+
+    def evaluate_by_material(self) -> float:
+        """
+        returns index representing what player is ahead in material using the standard value for pieces
+        """
+        index: float = 0
+        for row in self.squares:
+            for square in row:
+                if square.piece:
+                    color = 1 if square.piece.color is Color.WHITE else -1
+                    if square.piece.piece_type == PieceType.PAWN:
+                        index += color * 1
+                    elif square.piece.piece_type == PieceType.KNIGHT:
+                        index += color * 3
+                    elif square.piece.piece_type == PieceType.BISHOP:
+                        index += color * 3
+                    elif square.piece.piece_type == PieceType.ROOK:
+                        index += color * 5
+                    elif square.piece.piece_type == PieceType.QUEEN:
+                        index += color * 9
+        return index
 
 
